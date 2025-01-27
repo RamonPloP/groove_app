@@ -1,0 +1,55 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Cambiar de registro patronal al empleado: </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="changeForm" method="post">
+        <div class="modal-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <p>{{ employee.name }} {{ employee.last_name }} {{ employee.middle_name }}</p>
+                    <input type="text" name="employee_id" class="form-control" id="employee_id" placeholder="Fecha de alta" value="{{ employee.id }}" required="" hidden>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Sueldo <code>*</code></label>
+                    <input type="text" name="salary" class="form-control" id="salary" placeholder="sueldo"  value="{{ employee.salary }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="clients_trade_name_id">Cliente: <code>*</code></label>
+                    <select name="clients_trade_name_id" id="clients_trade_name_id" class="form-control select2" style="width: 100%;" required>
+                        <option value="">Selecciona una opción</option>
+                        {% for data in clients %}
+                            {% for tradeName in data.clients_Trade_name %}
+                                 <option {% if tradeName.id == employee.clients_trade_name_id %} selected="selected" {% endif %} value ="{{ tradeName.id }}" >{{ data.business_name }} | {{ tradeName.trade_name }}  </option>
+                            {% endfor %}
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="form-group">
+                    <label for="employer_registration_id">Registro patronal <code>*</code> </label>
+                    <select name="employer_registration_id" id="employer_registration_id" class="form-control select2" style="width: 100%;" required>
+                        <option value="">Selecciona una opción</option>
+                        {% for data in employerregistration %}
+                            <option  {% if data.id == employee.employer_registration_id %} selected="selected" {% endif %} value ="{{ data.id }}" >  {{ data.id  }} - {{ data.name }}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Fecha de Cambio<code>*</code></label>
+                    <input type="date" name="date_change " class="form-control" id="date_change" placeholder="Fecha de Cambio" value="" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="change_register(event, {{ employee.id }})">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

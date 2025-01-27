@@ -1,0 +1,133 @@
+<style>
+    * {
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact !important;                 /* Firefox 48 – 96 */
+    print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+}
+    .container{
+        width:451.9px;
+        height:345.9px;
+        border: solid 1px #000;
+        background-image: url("/static/assets/img/id-card-bg.png");
+        background-size: contain;
+    }
+    p{
+        font-size: 10px;
+    }
+    .edetails p strong {
+    font-size: 14px;
+}
+    span{
+        font-size:8px;
+        font-weight: bold;
+    }
+    div{
+        font-family: sans-serif;
+    }
+    .logo{
+            float: left;
+            padding-right: 10px;
+            width: 70px;
+            margin-top: 7px;
+    }
+
+        .edetails
+        {
+            text-align: center;
+            margin-top: 30px;
+            text-transform:capitalize;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        .compani_name{
+            float: right;
+            margin-right: 45px;
+            margin-top: 30px;
+            font-size: 12px;
+            font-family: "Calibri", sans-serif;
+        }
+        .compani_name span{
+            color: #9f8a47;
+            font-size: 12px;
+            font-weight: bold;
+
+        }
+
+        .parent {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+        width:451.9px;
+        height:345.9px;
+        border: solid 1px #000;
+        background-image: url("/static/assets/img/id-card-bg.png");
+        background-size: cover;
+        position: relative;
+}
+   .row {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+   }
+.div1 { grid-area: 1 / 1 / 2 / 2;
+            margin-top: 5px;
+}
+.div2 { grid-area: 1 / 2 / 2 / 3;
+    margin-top: 5px;
+}
+.signature{
+    width: 110px;
+}
+.center{
+    text-align: center;
+}
+.logo_container_photo img{
+            margin: auto;
+            display: inline-flex;
+            margin-top: 10px;
+    }
+.photo {
+    width: 90px;
+    background-color: #e6ebe0;
+    border: 3px solid rgba(255 , 255 , 255 , .2);
+}
+</style>
+
+
+
+<div class="parent">
+    <div class="div1">
+        <img class="logo"  src="/static/assets/img/logo_fides.png">
+        <p class="compani_name"> <span>FIDES SEGURIDAD</span> <br> PRIVADA SA DE SV</p>
+        <div class="logo_container_photo" >
+            <img class="photo" src="{{ employee.photo or '/static/assets/img/policeman.png'}}">
+        </div>
+        <div class="edetails">
+            <p><strong>{{ employee.name }} <br>{{ employee.last_name }} {{ employee.middle_name }}</strong> </p>
+            <p><span>CURP:</span> {{ employee.curp }}</p>
+            <p> <span>Fecha de ingreso:</span>{{ employee_start_date.date_start.strftime("%d/%m/%Y") }}</p>
+            <p><span>Puesto:</span> {{ employee.position.name }}</p>
+        </div>
+    </div>
+    <div class="div2">
+        <p><small> DIRECCÓN GENERAL DE SEGURIDAD PRIVADA</small></p>
+        <P><small>REGISTRO GENERAL PERMANENTE: <strong>DGSP/201-09/1468</strong></small></P>
+        <div class="center">
+            <p>NSS: {{ employee.nss }} </p>
+            <p># REG. PAT. : {{ employerregistration.employer_registration_number }} </p>
+            <img  class="signature" src="/static/assets/img/firma2.png">
+            <p>Kenia Ochoa Venzor</p>
+            <p><small>Directora Administrativa</small></p>
+            <p>TELS. DE EMERGENCIA:</p>
+            <P>{{ employerregistration.telephone }}</P>
+            <p>VIGENCIA: DICIEMBRE {{ year }} </p>
+            <p><small>{{ employerregistration.address }}</small></p>
+            <p><small>CPISEGURIDAD.COM</small></p>
+        </div>
+
+    </div>
+</div>

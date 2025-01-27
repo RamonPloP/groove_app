@@ -1,0 +1,771 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista de empleados {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+     <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+    <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css" />
+{% endblock stylesheets %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fas fa-search nav-icon"></i> Empleados</h1>
+          </div>
+            <div class="col-sm-6">
+                <a href="/employees/addf" class="btn btn-default float-right" >
+                  + Agregar
+                </a>
+            </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+              <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Filtros</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <form id="filter" method="post">
+                      <div class="card-body row">
+                                <div class="col-md-3">
+                                    <div  class="form-group">
+                                        <label for="credit_value">Estatus</label>
+                                        <select name="status" id="status" class="form-control select2" style="width: 100%;">
+                                            <option  value ="-1" selected="selected" >Todos</option>
+                                            <option value ="1" >Activo</option>
+                                            <option value ="0" >Baja</option>
+                                            <option value ="2" >Incapacitado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="credit_value">Estado</label>
+                                        <select name="state" id="state" class="form-control select2" style="width: 100%;" required >
+                                            <option selected="selected" value="-1">Todos</option>
+                                            {% for data in state %}
+                                                <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="credit_value">Ciudad</label>
+                                        <select name="city_id" id="city_id" class="form-control select2" style="width: 100%;" >
+                                            <option selected="selected" value="-1">Todos</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="credit_value">Servicio</label>
+                                        <select name="service" id="service" class="form-control select2" style="width: 100%;" >
+                                            <option selected="selected" value="-1" >Todos</option>
+                                            {% for data in services %}
+                                                <option value ="{{ data.id }}" >{{ data.trade_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                              <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="nss">NSS</label>
+                                            <input type="number" class="form-control" name="nss" id="nss" placeholder="NSS">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="initial_date">Fecha de alta</label>
+                                            <input type="date" class="form-control" name="initial_date" id="initial_date">
+                                    </div>
+                                </div>
+                                 <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="down_date">Fecha de baja</label>
+                                            <input type="date" class="form-control" name="down_date" id="down_date">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="supervisor">Supervisor</label>
+                                         <select name="supervisor" id="supervisor" class="form-control select2" style="width: 100%;" >
+                                            <option selected="selected" value="-1" >Todos</option>
+                                            {% for data in supervisors %}
+                                                <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 offset-md-9">
+                                    <button type="button" class="btn btn-primary float-right"  data-toggle="modal"  onclick="filter(event) " data-target="#modal-default">
+                                      Buscar
+                                    </button>
+                                </div>
+                              </div>
+                      </form>        <!-- /.card-body -->
+                    </div>
+
+                <!-- /.card -->
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Listado de empleados registrados en el sistema</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="banks_list" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                      <th>Foto</th>
+                    <th>CURP</th>
+                    <th>Nombre</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                  <tfoot>
+                  <th>Foto</th>
+                    <th>CURP</th>
+                    <th>Nombre</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <!-- Modal -->
+        <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="data_modal"
+             aria-hidden="true">
+        </div>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="/static/assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+   <!-- bs-custom-file-input -->
+  <script src="/static/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- SweetAlert2 -->
+  <script src="/static/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+  <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
+  <!-- page script -->
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+  <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.js"></script>
+  <script>
+
+  $('#state').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+
+  $('#city_id').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+
+  $('#client').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+
+  $('#supervisor').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+
+  $('#service').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+
+$(function () {
+        get_employees()
+    $('form[name="search"]').submit(function(evt) {
+              evt.preventDefault();
+              $.each($(this).serializeArray(), function(index, value) {
+                data[value.name] = value.value;
+              });
+              table.ajax.reload();
+            });
+        // Obtener los elementos del HTML
+    var state = $("#state");
+
+// Agregar un evento de cambio al primer input para actualizar el segundo input
+state.on("change", function() {
+    document.getElementById("city_id").innerHTML=""
+     var opcion = document.createElement("option");
+    opcion.value = "-1";
+    opcion.text = "Todos";
+    document.getElementById("city_id").appendChild(opcion);
+    var state_id = state.val();
+    get_json_city(state_id)
+});
+
+    });
+
+
+    function change_register(event, id){
+        event.preventDefault()
+        var form = $("#changeForm")[0]
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            url: '/employee/changeRegister/',
+            data: new FormData(form)
+        }).then(function (response) {
+            toastr.success(response.data, { timeOut: 9500 })
+            get_employees()
+            $('#data_modal').modal("hide")
+        }).catch(function (error) {
+            toastr.error(error.response.data)
+            $("#create_button").prop("disabled", false)
+            console.log(error.response)
+        }).finally(function () {
+            $("form :input").prop("readonly", false)
+            $('form select').css('pointer-events', 'all')
+        });
+    }
+
+    function filter(e) {
+        e.preventDefault()
+        var status = $('#status').val()
+        var service = $('#service').val()
+        var city_id = $('#city_id').val()
+        var state = $('#state').val()
+        var nss = $('#nss').val()
+        var supervisor = $('#supervisor').val()
+        var client = $('#supervisor').val()
+        var up_date = $('#initial_date').val()
+        var down_date = $('#down_date').val()
+        update_table(status,service,state,city_id, nss, supervisor, client, up_date, down_date)
+    }
+
+    function register_end(id,e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/crud/end/' + id,
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_employees()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+        }
+    }
+
+    function register_blacklist(e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/blacklist/crud',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_employees()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+        }
+    }
+
+    function add_start(id,e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/crud/start/' + id,
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_employees()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+        }
+    }
+
+    function add_new(button) {
+        $(button).attr('disabled', true);
+        axios({
+            method: 'get',
+            url: '/emplo/add'
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+        }).finally(function () {
+            $(button).attr('disabled', false);
+        });
+     }
+
+
+     function get_json_city(state_id){
+      var city = document.getElementById("city_id");
+      $.getJSON('/city/list/'+state_id, function (data) {
+                $.each(data, function (i, element) {
+                    console.log(element.name)
+                    var opcion = document.createElement("option");
+                    opcion.value = element.id;
+                    opcion.text = element.name;
+                    city.appendChild(opcion);
+                })
+            }
+        );
+    }
+
+
+    function update_table(status,service,state,city_id, nss, supervisor, client, up_date, down_date) {
+             let data = {};
+             $('#banks_list').DataTable().clear();
+             $('#banks_list').DataTable().destroy();
+             $('#banks_list').DataTable({
+                        dom: 'lBfrtip',
+                        buttons: [
+                             'csv', 'excel',
+                        ],
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+                        },
+                        processing: true,
+                        serverSide: true,
+                          searching: true,
+                          ordering: false,
+                          pagingType: 'full_numbers',
+                          ajax: {
+                            url: {{ url_for('employees.employees_advanced_list_filter') | tojson }},
+                            dataSrc: 'data',
+                            data: function (d) {
+                              d = $.extend(d, data);
+                              d.status=status
+                              d.state = state
+                              d.service = service
+                              d.city_id =city_id
+                              d.nss = nss
+                              d.supervisor = supervisor
+                              d.client = client
+                              d.up_date = up_date
+                              d.down_date = down_date
+                            }
+                          },
+                        columns: [
+                            {title: "FOTO",render: function (data, type, row) {
+                                let photo_url = row.photo;
+                                if (photo_url == null){
+                                    photo_url = "/static/assets/img/noimage.png"
+                                }
+                              return '<a '+
+                                 ' data-fancybox'+
+                                 ' href="'+photo_url+'"'+
+                                 ' data-caption="'+row.name+'">'+
+                                '<img style="max-width: 100%;" src="'+photo_url+'">'+
+                                '</a>'
+                            }},
+                            {title: "CURP",data:"curp"},
+                            {title: "NOMBRE",render: function (data, type, row) {
+                                if(row.middle_name !== 'None') { materno = row.middle_name}else{materno =''}
+                                if(row.middle_name !== null) { materno = row.middle_name}else{materno =''}
+                              return  row.last_name + ' ' +  materno + ' ' + row.name
+                            }},
+                            {title: "ESTATUS",render: function (data, type, row) {
+                                 if (row.status == 0) {
+                                     return '<span class="text-danger">BAJA</span>'
+                                 }
+                                 if (row.status == 1){
+                                     return '<span class="text-success">ACTIVO</span>'
+                                 }
+                                 if (row.status == 2){
+                                     return '<span class="text-warning">INCAPACITADO</span>'
+                                 }
+                            }},
+                            {title: "ACCIONES",render: function (data, type, row) {
+                              if (row.status == 0) {
+                                  return '<button type="button" class="btn btn-sm btn-outline-warning" onclick="show_modal(' + row.id +', \'/employee/show/' +row.id+ '\')" title="Ver">'+
+                                            '<i class="fas fa-eye"></i>'+
+                                        '</button>'+
+                                        ' <button type="button" class="btn btn-sm btn-outline-success" onclick="show_modal('+row.id+', \'/employee/start/'+row.id+'\')" title="Dar de alta">'+
+                                            '<i class="fas fa-plus-circle"></i>'+
+                                        '</button>'+
+                                        ' <button type="button" class="btn btn-sm btn-outline-secondary" onclick="show_modal('+row.id+', \'/employee/modal/settlement/'+row.id+'\')" title="Finiquito">'+
+                                            '<i class="fas fa-money-check"></i>'+
+                                        '</button>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-danger" onclick="show_modal('+row.id+', \'/employees/modal/addpdf/'+row.id+'\')"  title="Agregar PDF baja">'+
+                                            '<i class="fas fa-file-pdf"></i>'+
+                                        '</a>'
+                              }else{
+                                  return '<a type="button" class="btn btn-sm btn-outline-primary" href="/employee/edit/'+row.id+'" title="Editar">'+
+                                            '<i class="fas fa-edit"></i>'+
+                                        '</a>'+
+                                       '<button type="button" class="btn btn-sm btn-outline-warning" onclick="show_modal(' + row.id +', \'/employee/show/' +row.id+ '\')" title="Ver">'+
+                                            '<i class="fas fa-eye"></i>'+
+                                        '</button>'+
+                                        '<button type="button" class="btn btn-sm btn-outline-secondary" onclick="show_modal('+row.id+', \'/employee/modal/addphoto/' + row.id+'\')" title="Subir foto">'+
+                                            '<i class="fas fa-image"></i>'+
+                                        '</button>'+
+                                        '<button type="button" class="btn btn-sm btn-outline-danger" onclick="show_modal('+row.id+', \'/employee/end/'+row.id+'\')" title="Dar de baja">'+
+                                            '<i class="fas fa-minus-circle"></i>'+
+                                        '</button>'+
+                                        '<button type="button" class="btn btn-sm btn-outline-danger" onclick="show_modal('+row.id+', \'/employee/blacklist/'+row.id+'\')" title="Agregar a lista negra">'+
+                                            '<i class="fas fa-ban"></i>'+
+                                        '</button>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-info"  onclick="show_modal('+row.id+', \'/employee/modal/idcard/'+row.id+'\')" title="Credencial">'+
+                                            '<i class="fas fa-id-card"></i>'+
+                                        '</a>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-secondary"  onclick="show_modal('+row.id+', \'/employee/modal/vacation/'+row.id+'\')" title="Constancia Vacaciones">'+
+                                            '<i class="fas fa-file-contract"></i>'+
+                                        '</a>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-warning"  onclick="show_modal('+row.id+', \'/employees/modal/debts/'+row.id+'\')" title="Agregar adeudo">'+
+                                            '<i class="fas fa-circle"></i>'+
+                                        '</a>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-info" onclick="show_modal(' + row.id + ', \'/employees/modal/addpdf/' + row.id + '\')" title="Agregar PDF alta">' +
+                                            '<i class="fas fa-file-pdf"></i>' +
+                                        '</a>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-danger"  onclick="show_modal('+row.id+', \'/employees/modal/add/inability/'+row.id+'\')" title="Agregar incapacidad">'+
+                                            '<i class="fas fa-plus"></i>'+
+                                        '</a>'+
+                                        '<button type="button" class="btn btn-sm btn-outline-info" onclick="show_modal('+row.id+', \'/employees/modal/change/'+row.id+'\')" title="Cambiar de registro">'+
+                                            '<i class="fas fa-exchange-alt"></i>'+
+                                        '</button>'+
+                                        '<button type="button" class="btn btn-sm btn-outline-success" onclick="show_modal('+row.id +',\'/employee/credit/'+row.id+'\')" title="Pedir prestamo">'+
+                                            '<i class="fas fa-money-bill-wave"></i>'+
+                                        '</button>'+
+                                        '<a type="button" class="btn btn-sm btn-outline-secondary" href="/vacations/add/'+row.id+'" title="Solicitar vacaciones">'+
+                                            '<i class="fas fa-file-alt"></i>'+
+                                        '</a>'
+                              }
+                            }}
+                        ]
+                    });
+            Fancybox.bind('[data-fancybox]', {
+                            //
+                          });
+    }
+
+    function get_employees() {
+         update_table()
+
+    }
+
+    function register_pdf(e){
+         e.preventDefault()
+        var pdf = $('#pdf').val();
+        if(pdf=='')
+        {
+            toastr.error('Selecciona un pdf, el campo no puede ir vacio')
+            return false;
+        }
+        var form_data = new FormData();
+        form_data.append('pdf', $('#pdf').prop('files')[0]);
+        form_data.append('employee_id', $('#employee_id').val());
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            url: '/employees/add/pdf/',
+            data: form_data
+        }).then(function (response) {
+            toastr.success(response.data, { timeOut: 9500 })
+            get_employees()
+            $('#data_modal').modal("hide")
+        }).catch(function (error) {
+            toastr.error(error.response.data)
+            $("#create_button").prop("disabled", false)
+            console.log(error.response)
+        }).finally(function () {
+            $("form :input").prop("readonly", false)
+            $('form select').css('pointer-events', 'all')
+        });
+    }
+
+    function generate_idcard(employe_id,employerregistration_id,e) {
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/idcard/',
+                data: {
+                    employe_id:employe_id,
+                    employerregistration_id:employerregistration_id
+                }
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_employees()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+
+    }
+
+    function register_photo(e) {
+        e.preventDefault()
+        var photo = $('#photo').val();
+        if(photo=='')
+        {
+            toastr.error('Selecciona una imagen, el campo no puede ir vacio')
+            return false;
+        }
+        var form_data = new FormData();
+        form_data.append('photo', photo);
+        form_data.append('employee_id', $('#employee_id').val());
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            url: '/employees/photo/add',
+            data: form_data
+        }).then(function (response) {
+            toastr.success(response.data, { timeOut: 9500 })
+            get_employees()
+            $('#data_modal').modal("hide")
+        }).catch(function (error) {
+            toastr.error(error.response.data)
+            $("#create_button").prop("disabled", false)
+            console.log(error.response)
+        }).finally(function () {
+            $("form :input").prop("readonly", false)
+            $('form select').css('pointer-events', 'all')
+        });
+    }
+
+function register_debt(e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/debts/add',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                update_table()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                console.log(error)
+            }).finally(function () {
+            });
+        }
+    }
+
+    function register_inability(e, type, status) {
+         e.preventDefault();
+         let form2 = $("#addForm")[0]
+         let forms = new FormData(form2);
+         let typefo = forms.get('initial_subsequent')
+        if(typefo == 'Inicial' && status == 1){
+            Swal.fire({
+              icon: 'warning',
+              title: 'Oops...',
+              text: "No puede haber dos incapacidades iniciales activas al mismo tiempo ó una inicial despues de una subsecuente activa"
+
+            })
+          }else{
+          if(document.getElementById('number_days').value > 0){
+             var form = $("#addForm")[0]
+            if (!form.checkValidity())
+                form.reportValidity()
+            else {
+                axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    url: '/employee/inability/add',
+                    data: new FormData(form)
+                }).then(function (response) {
+                    toastr.success(response.data, { timeOut: 9500 })
+                    update_table()
+                    $('#data_modal').modal("hide")
+                }).catch(function (error) {
+                    toastr.error(error.response.data)
+                    console.log(error)
+                }).finally(function () {
+                });
+            }
+          }else{
+            Swal.fire({
+              icon: 'warning',
+              title: 'Oops...',
+              text: "Las fecha de fin no puede ser anterior a la de inicio"
+
+            })
+          }
+          }
+     }
+
+    function show_modal(id,url) {
+        axios({
+            method: 'get',
+            url: url
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            bsCustomFileInput.init();
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+            toastr.error(error.data, { timeOut: 9500 })
+        });
+    }
+
+    function register_credit(e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employee/credit/add',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                 update_table()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                console.log(error)
+            }).finally(function () {
+
+            });
+        }
+    }
+
+  //$('#data_modal').one('shown.bs.modal', function () {
+       // Obtén el elemento img por su id
+
+//});
+
+
+
+  </script>
+{% endblock javascripts %}

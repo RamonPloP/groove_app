@@ -1,0 +1,70 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar adeudo al empleado {{employee.employee_number }} </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+       <input type="text" name="employee_id" class="form-control" id="employee_id" placeholder="id del empleado" value="{{employee.id}}" required hidden>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <p>{{ employee.name }} {{ employee.last_name }} {{ employee.middle_name }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="name">Cantidad adeudada</label>
+                        <input type="number" name="debt" class="form-control" id="debt" min="1" placeholder="Cantidad adeudada" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Cantidad a descontar cada dia de pago</label>
+                        <input type="number" name="payment_quantity" class="form-control" min="1" id="payment_quantity" placeholder="Cantidad a descontar " value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reasons_leave">Tipo de adeudo</label>
+                        <select name="debt_type" id="debt_type" class="form-control " style="width: 100%;">
+                            <option selected="selected">Selecciona una opción</option>
+                            <option value="Deducible">Deducible</option>
+                            <option value="Prestamo">Prestamo</option>
+                            <option value="Ayúdate ">Ayúdate</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div id='hide' class="col-md-12">
+                     <div class="form-group">
+                         <label for="name">Especifique cual:</label>
+                         <textarea type="text" maxlength="700" name="other_description" class="form-control" id="other_description" placeholder="Notas" value="" ></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register_debt(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+    $("#hide").hide();
+    $('#other_description').disabled = true;
+    $('#debt_type').on("change", function() {
+        if ($('#debt_type').val() == 'Otro'){
+            $("#hide").show();
+            $('#other_description').disabled = false;
+        }
+        else{
+            $("#hide").hide();
+            $('#other_description').disabled = true;
+        }
+
+});
+</script>

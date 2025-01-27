@@ -1,0 +1,33 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Solicitar credito <br>{{ employee }}</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      {% if checks.active_credit == 1 or checks.senioity==1 %}
+          <div class="modal-body">
+            <h4 class="text-danger">El empleado no cuenta con los requisitos para solicitar un credito</h4>
+          </div>
+         {% else %}
+            <form id="addForm" method="post">
+            <input type="number" name="employee_id" class="form-control" id="employee_id" placeholder="id del empleado" value="{{employee_id}}" required hidden>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="name">Cantidad a solicitar</label>
+                        <input type="number" name="credit_value" class="form-control" id="credit_value" placeholder="Cantidad a solicitar" value="" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+               <button type="submit" class="btn btn-primary" onclick="register_credit(event)">Solicitar</button>
+            </div>
+         </form>
+      {% endif %}
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

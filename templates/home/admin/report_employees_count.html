@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Reporte de fuerza laboral por supervisor{% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+   <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+
+
+{% endblock stylesheets %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fas fa-users nav-icon"></i> Reporte de fuerza laboral por supervisor </h1>
+          </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Fuerza laboral acargo de supervisores</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="row card-body">
+                      <div class="col-lg-12  col-sm-12 ">
+                        <table id="banks_list" class="table table-bordered table-striped">
+                          <thead>
+                          <tr>
+                            <th>Nombre supervisor</th>
+                            <th>Cantidad de empleados</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for data in count %}
+                              <tr>
+                                <td>{{ data.name  }}</td>
+                                <td>{{ data.count }}</td>
+                              </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <!-- Modal -->
+        <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="data_modal"
+             aria-hidden="true">
+        </div>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+    <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+ <!-- SweetAlert2 -->
+  <script src="/static/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+ <!-- jquery-validation -->
+  <script src="/static/assets/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/static/assets/plugins/jquery-validation/additional-methods.min.js"></script>
+  <!-- page script -->
+  <script>
+
+  </script>
+
+{% endblock javascripts %}

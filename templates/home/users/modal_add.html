@@ -1,0 +1,74 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar usuario</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="username">Nombre <code>*</code></label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Nombre de usuario"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Correo <code>*</code></label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Nombre de usuario"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Rol <code>*</code> </label>
+                        <select name="role" id="role" class="form-control" style="width: 100%;" aria-invalid="false" required>
+                            <option selected="selected">Selecciona una opción</option>
+                            <option value="0">Administrador</option>
+                            <option value="1">RH</option>
+                            <option value="3">SUPERVISOR</option>
+                            <option value="4">RH Y SUPERVISOR</option>
+                            <option value="5">SUPER ADMINISTRADOR</option>
+                            <option value="6">CONTROL DE VEHICULOS</option>
+                            <option value="7">ADMIN DE SUPERVISOR</option>
+                          </select>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="password">Contraseña <code>*</code></label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Repetir contraseña <code>*</code></label>
+                        <input type="password" name="password2" class="form-control" id="password2" placeholder="Contraseña"  required>
+                    </div>
+                    <div class="form-group hidden-rh" hidden>
+                        <label for="role">Estados a los que pertenece <code>*</code> </label>
+                        <select name="multi_states[]" id="multi_states[]" class="form-control" multiple style="width: 100%;" aria-invalid="false" >
+                            {% for data in states %}
+                                 <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                          </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+     $('#role').on("change", function() {
+        role =$('#role').val()
+        if (role==1 || role==4){
+             $('.hidden-rh').removeAttr('hidden');
+        }else{
+             $(".hidden-rh").attr("hidden",true);
+        }
+    });
+</script>

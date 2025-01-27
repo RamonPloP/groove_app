@@ -1,0 +1,313 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista de usuarios {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+    <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fas fa-house-user nav-icon"></i> Usuarios</h1>
+          </div>
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
+                  + Agregar
+                </button>
+            </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Listado de usuarios registrados en el sistema</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="table_list" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Permiso</th>
+                      <th>Estatus</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                  <tfoot>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Permiso</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <!-- Modal -->
+        <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="data_modal"
+             aria-hidden="true">
+        </div>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+     <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
+  <!-- page script -->
+  <script>
+    $(function () {
+       get_users()
+    });
+
+    function get_users() {
+        $.getJSON('/users/list', function (data) {
+                update_table(data)
+            }
+        );
+    }
+
+    function update_table(data) {
+        users = []
+        $.each(data, function (i, element) {
+            user = []
+            user.push(element.id)
+            user.push(element.name)
+            user.push(element.username)
+            if (element.role ==0) {
+                user.push('Administrador')
+            }
+            else if (element.role ==1) {
+                user.push('RH')
+            }
+            else if (element.role ==3) {
+                user.push('SUPERVISOR')
+            }
+             else if (element.role ==4) {
+                user.push('RH Y SUPERVISOR')
+            }
+             else if (element.role ==5) {
+                user.push('SUPER ADMINISTRADOR')
+            }
+             else if (element.role ==6) {
+                user.push('CONTROL DE VEHICULOS')
+            }
+             else if (element.role ==7) {
+                user.push('ADMIN DE SUPERVISOR')
+            }
+
+            if (element.status == 1) user.push('Activo');
+
+            if (element.status == 0) user.push('Inactivo');
+
+            if(element.status == 0){
+                btn = '<button type="button" class="btn btn-outline-success" title="Cambiar a activo" onclick="changeActive('+element.id +')">'+
+                                '<i class="fas fa-check"></i>'+
+                            '</button>';
+            }else{
+                btn = '<button type="button" class="btn btn-outline-danger" title="Cambiar a inactivo" onclick="changeInactive('+element.id +')">'+
+                                '<i class="fas fa-times"></i>'+
+                            '</button>';
+            }
+
+            user.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
+                                '<i class="fas fa-edit"></i>'+
+                            '</button>'+btn)
+            users.push(user)
+        })
+        $('#table_list').DataTable().clear();
+        $('#table_list').DataTable().destroy();
+        $('#table_list').DataTable({
+            dom: 'lBfrtip',
+              "buttons": [
+                'excel'
+              ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+            },
+            data: users,
+            columns: [
+                {title: "ID"},
+                {title: "NOMBRE"},
+                {title: "CORREO"},
+                {title: "PERMISO"},
+                {title: "ESTATUS"},
+                {title: "ACCIONES"}
+            ]
+
+        });
+    }
+
+    function changeActive(id){
+        url = '/users/changeactive/'+id;
+        console.log(url);
+        axios.post(url).then(function (response) {
+            console.log(response);
+            get_users();
+          }).catch(function (error) {
+            console.log(error);
+          })
+    }
+
+    function changeInactive(id){
+        url = '/users/changeinactive/'+id;
+        console.log(url);
+        axios.post(url).then(function (response) {
+            console.log(response);
+            get_users()
+          }).catch(function (error) {
+            console.log(error);
+          })
+    }
+
+     function show_info(id, button) {
+        $(button).attr('disabled', true);
+        axios({
+            method: 'get',
+            url: '/users/' + id
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+        }).finally(function () {
+            $(button).attr('disabled', false);
+        });
+
+
+    }
+    function register(e) {
+        e.preventDefault()
+        if ($('#password').val() != $('#password2').val()){
+            toastr.error('Las contraseñas no coinciden')
+            return 0
+        }
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                url: '/users/crud ',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_users()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+            });
+        }
+    }
+function edit(e) {
+        e.preventDefault()
+        if ($('#password').val() != $('#password2').val()){
+            toastr.error('Las contraseñas no coinciden')
+            return 0
+        }
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                url: '/users/edit',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_users()
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+            });
+        }
+    }
+    function add_new(button) {
+        $(button).attr('disabled', true);
+        axios({
+            method: 'get',
+            url: '/users/add'
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+        }).finally(function () {
+            $(button).attr('disabled', false);
+        });
+     }
+  </script>
+
+{% endblock javascripts %}

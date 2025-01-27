@@ -1,0 +1,16 @@
+from flask import request, jsonify, make_response, Flask, render_template, Blueprint, redirect, url_for, jsonify, Response
+from flask_login import login_required, current_user
+import logging
+main = Blueprint('main', __name__)
+
+logger = logging.getLogger(__name__)
+
+@main.route('/')
+def index():
+    return redirect(url_for('auth.login'))
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('home/dashboard.html')
+

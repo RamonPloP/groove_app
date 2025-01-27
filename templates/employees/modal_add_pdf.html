@@ -1,0 +1,48 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+          {% if employee.status == "1" %}
+    Agregar PDF de Alta al empleado {{ employee.curp }}
+{% elif employee.status == "0" %}
+    Agregar PDF de Baja al empleado {{ employee.curp }}
+{% endif %}
+          </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" name="employee_id" class="form-control" id="employee_id" placeholder="Numero de empleado" value="{{ employee.id }}" hidden required>
+                     <div class="form-group">
+                        <label for="file">PDF de empleado</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" name="pdf" id="pdf" required>
+                          <label class="custom-file-label" for="customFile">Elegir archivo</label>
+                        </div>
+                     </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            {% if employee.status == '0' %}
+                {% if employeeRh_com.link_down_pdf %}
+                	<a type="button" href='{{ employeeRh_com.link_down_pdf }}' class="btn btn-sm btn-outline-success" title="PDF de Baja">Descargar ultimo PDF</a>
+                {% endif %}
+            {% elif employee.status == '1' %}
+                {% if employeeRh.link_up_pdf %}
+                	<a type="button" href='{{ employeeRh.link_up_pdf }}' class="btn btn-sm btn-outline-success" title="PDF de Alta">Descargar ultimo PDF</a>
+                {% endif %}
+            {% endif %}
+           <button type="submit" class="btn btn-primary" onclick="register_pdf(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

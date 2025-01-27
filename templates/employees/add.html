@@ -1,0 +1,957 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Agregar empleados {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+     <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="/static/assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="/static/assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fa-solid fa-user-plus"></i> Agregar nuevo empleado</h1>
+          </div>
+          <div class="col-sm-6">
+
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Datos Generales</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form id="addForm"  method="post">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                        </div>
+                       <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employee_type">Tipo de Empleado</label>
+                                <select name="employee_type" id="employee_type" class="form-control select2" style="width: 100%;">
+                                    {% for data in employee_type %}
+                                        {% if data[0] != 5 %}
+                                            {% if data[0] != 1 and current_user.role != 5 %}
+                                                <option value ="{{ data[0] }}" >{{ data[1] }}</option>
+                                            {% elif current_user.role == 5 %}
+                                                <option value ="{{ data[0] }}" >{{ data[1] }}</option>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Nombre(s) <code>*</code></label>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Nombre" oninput="this.value = this.value.toUpperCase()" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="last_name">Apellido paterno <code>*</code></label>
+                                <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Apellido paterno" oninput="this.value = this.value.toUpperCase()" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="last_name">Apellido materno</label>
+                                <input type="text" name="middle_name" class="form-control" id="middle_name" placeholder="Apellido materno" oninput="this.value = this.value.toUpperCase()" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                              <label>Fecha de nacimiento <code>*</code></label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" name="birth_date" id="birth_date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" required>
+                              </div>
+                              <!-- /.input group -->
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Genero <code>*</code> </label>
+                                <select name="gender" id="gender" class="form-control " style="width: 100%;" required>
+                                    <option selected="selected" disabled value="">Selecciona una opción</option>
+                                    <option value="H">MASCULINO</option>
+                                    <option value="M">FEMENINO</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="state">Estado <code>*</code></label>
+                                 <select name="state" id="state" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in state_no %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Ciudad <code>*</code></label>
+                                  <select name="city_id" id="city_id" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="curp">CURP <code>*</code></label>
+                                <input type="text" name="curp" class="form-control" id="curp" placeholder="CURP"  required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="rfc">RFC <code>*</code></label>
+                                <input type="text" name="rfc" minlength="13" maxlength="15" class="form-control" id="rfc" placeholder="RFC" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Tipo de sangre </label>
+                                <select name="blood_type" id="blood_type" class="form-control " style="width: 100%;">
+                                    <option value="" selected="selected">Selecciona una opción</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                  </select>
+                            </div>
+                        </div>
+
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="type_overtime_id">Teléfono</label>
+                                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" minlength="10" maxlength="10"  name="telephone" class="form-control" id="telephone" placeholder="Teléfono" >
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="postal_code">Codigo postal</label>
+                                <input type="number" name="postal_code" class="form-control" id="postal_code" placeholder="Codigo postal" >
+                            </div>
+                        </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="suburb">Colonia</label>
+                                <input type="text" name="suburb" class="form-control" id="suburb" placeholder="Colonia" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nss">Calle</label>
+                                <input type="text" name="street" class="form-control" id="street" placeholder="Calle" >
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="external_number"># exterior</label>
+                                <input type="text" name="external_number" class="form-control" id="external_number" placeholder="# exterior" >
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="internal_number"># interior</label>
+                                <input type="text" name="internal_number" class="form-control" id="internal_number" placeholder="# interior" >
+                            </div>
+                        </div>
+
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Registro patronal <code>*</code> </label>
+                                <select name="employer_registration_id" id="employer_registration_id" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in employerregistration %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="state">Estado en el que labora  <code>*</code></label>
+                                 <select name="location_state" id="location_state" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in state %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Ciudad en la que labora <code>*</code></label>
+                                  <select name="location" id="location" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in city %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="suburb">CUIP</label>
+                                <input type="text" name="cuip" class="form-control" id="cuip" placeholder="CUIP " >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-header">
+                    <h3 class="card-title">Datos de la nomina</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="type_overtime_id">Tipo de nomina <code>*</code></label>
+                                <select name="payroll_id" id="payroll_id" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in payroll %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Banco</label>
+                                <select name="bank_id" id="bank_id" class="form-control select2" style="width: 100%;">
+                                    <option value="" selected="selected">Selecciona una opción</option>
+                                    {% for data in banks %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="bank_account">Numero de cuenta  </label>
+                                <input type="text" pattern="\d{9,18}" minlength="9" maxlength="18" name="bank_account" class="form-control" id="bank_account" placeholder="Numero de cuenta">
+                            </div>
+                        </div>
+                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="bank_card_number">Numero de tarjeta</label>
+                                <input type="text" pattern="\d{16}" minlength="16" maxlength="16" name="bank_card_number" class="form-control" id="bank_card_number" placeholder="Numero de tarjeta" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="supervisor_user_id">Supervisor <code>*</code></label>
+                                <select name="supervisor_user_id" id="supervisor_user_id" class="form-control select2" style="width: 100%;"required>
+                                    <option></option>
+                                    {% for data in supervisor_user_id %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+
+{#                        <div class="col-md-3">#}
+{#                            <div class="form-group">#}
+{#                                <label for="last_name">Supervisor  <code>*</code></label>#}
+{#                                <input type="text" name="supervisor" class="form-control" id="supervisor" placeholder="Supervisor" >#}
+{#                            </div>#}
+{#                        </div>#}
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="services_id">Nombre de la nomina <code>*</code></label>
+                                <select name="services_id" id="services_id" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in services %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="salary_div">
+                            <div class="form-group">
+                                <label for="salary">Sueldo <code>*</code></label>
+                                <input type="text" name="salary" class="form-control" id="salary" placeholder="sueldo" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="sdi_imss_div">
+                            <div class="form-group">
+                                <label for="rfc">SDI IMSS <code>*</code></label>
+                                <input type="text" name="sdi_imss" class="form-control" id="sdi_imss" placeholder="SDI IMSS" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="type_overtime_id">Tipo de tiempo extra <code>*</code></label>
+                                <select name="type_overtime_id" id="type_overtime_id" class="form-control select2" style="width: 100%;"required>
+                                    <option></option>
+                                    {% for data in type_over_time %}
+                                        <option value ="{{ data.id }}" >{{ data.type }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nss">NSS  <code>*</code></label>
+                                <input type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" minlength="11" maxlength="11" name="nss" class="form-control" id="nss" placeholder="NSS" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="pension">Porcentaje de Pensión alimenticia</label>
+                                <select name="percent_pension" id="percent_pension" class="form-control select2" style="width: 100%;">
+                                    {% for data in percent_pension %}
+                                        <option value ="{{ data[0] }}" >{{ data[1] }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="pension">Pensión alimenticia</label>
+                                <input type="number" step="any" name="pension" class="form-control" id="pension" placeholder="Pensión" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-3 have-pension">
+                            <div class="form-group">
+                                <label for="pension">Nombre beneficiario pension</label>
+                                <input type="text" name="pension_name" class="form-control" id="pension_name" placeholder="Nombre beneficiario" >
+                            </div>
+                        </div>
+                        <div class="col-md-3 have-pension">
+                            <div class="form-group">
+                                <label for="employer_registration_id">Banco beneficiario pension</label>
+                                <select name="pension_bank_id" id="pension_bank_id" class="form-control select2" style="width: 100%;">
+                                    <option value="" selected="selected">Selecciona una opción</option>
+                                    {% for data in banks %}
+                                        <option value ="{{ data.id }}" >{{ data.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 have-pension">
+                            <div class="form-group">
+                                <label for="pension_bank_account">Numero de cuenta beneficiario pension  </label>
+                                <input type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" minlength="10" maxlength="18" name="pension_bank_account" class="form-control" id="pension_bank_account" placeholder="Numero de cuenta">
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="div_trade_names">
+                            <div class="form-group">
+                                <label for="clients_trade_name_id">Cliente <code>*</code> </label>
+                                <select name="clients_trade_name_id" id="clients_trade_name_id" class="form-control select2" style="width: 100%;" required>
+                                    <option value="">Selecciona una opción</option>
+                                    {% for data in clients %}
+                                        <optgroup label="{{ data.business_name }}">
+                                            {% for tradeName in data.clients_Trade_name %}
+                                                {% if tradeName.status == '1'  %}
+                                                  <option value ="{{ tradeName.id }}" > {{ tradeName.trade_name }}  </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="position_id">Puesto <code>*</code> </label>
+                                <select name="position_id" id="position_id" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in positions %}
+                                        <option value="{{ data.id }}" >{{ data.name }} </option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="bonus">Bono</label>
+                                <input type="text" name="bonus" class="form-control" id="bonus" placeholder="Bono">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-header">
+                    <h3 class="card-title">Datos de Recursos Humanos</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                              <label>Fecha de ingreso <code>*</code> </label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" name="date_start" id="date_start" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy"  required>
+                              </div>
+                              <!-- /.input group -->
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="infonavit">Credito Infonavit</label>
+                                <select name="infonavit" id="infonavit" class="form-control" style="width: 100%;" required>
+                                     <option selected="selected" value="0">No</option>
+                                     <option value="1">Si</option>
+                                 </select>
+                            </div>
+                        </div>
+                         <div class="col-md-3 have-infonavit">
+                            <div class="form-group">
+                                <label for="type_credit_infonavit">Tipo de credito infonavit</label>
+                                 <select name="type_credit_infonavit" id="type_credit_infonavit" class="form-control" style="width: 100%;" >
+                                     <option selected="selected" value="">Selecciona una opción</option>
+                                     <option value="VSM">VSM</option>
+                                     <option value="CF">CF</option>
+                                     <option value="%">%</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 have-infonavit">
+                            <div class="form-group">
+                                <label for="credit_value">Valor del credito en VSM</label>
+                                <input type="number" step="any" name="credit_value" class="form-control" id="credit_value" placeholder="Valor del credito" >
+                            </div>
+                        </div>
+                        <div class="col-md-3 have-infonavit">
+                            <div class="form-group">
+                                <label for="credit_number">Numero del credito</label>
+                                <input type="number" name="credit_number" class="form-control" id="credit_number" placeholder="Numero del credito" >
+                            </div>
+                        </div>
+                        <div class="col-md-9"></div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="observations">Observaciones</label>
+                                <textarea rows="4" type="text" name="observations" class="form-control" id="observations" placeholder="Observaciones" ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+
+                <div class="card-footer">
+                  <button type="submit" class="float-right btn btn-primary" onclick="register(event)">Guardar</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- jquery-validation -->
+  <script src="/static/assets/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/static/assets/plugins/jquery-validation/additional-methods.min.js"></script>
+  <script src="/static/assets/plugins/jquery-validation/validate.es.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   <!-- InputMask -->
+  <script src="/static/assets/plugins/moment/moment.min.js"></script>
+  <script src="/static/assets/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+  <script src="/static/assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+      <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+       <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
+   <!-- bs-custom-file-input -->
+  <script src="/static/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+   <!-- SweetAlert2 -->
+  <script src="/static/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+  <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
+  <script>
+  $('.have-infonavit').hide();
+  $('.have-pension').hide();
+  bsCustomFileInput.init();
+ $('.select2').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true,
+})
+function alert_salary(min_salary){
+ let salary = document.getElementById('salary').value.trim();
+    salary = salary.replace('$', '').replace(',', '');
+    salary = Number(salary);
+    if(document.getElementById("employee_type").value != 4){
+        if(salary<min_salary){
+          document.getElementById('salary').value = min_salary
+          Swal.fire({
+              title: "Advertencia",
+              text: `No puedes ingresar un salario menor al minimo: ${min_salary}`,
+              icon: "info"
+          });
+      }
+    }
+  }
+  function alert_max_salary(){
+    let salary = document.getElementById('salary').value.trim();
+    salary = salary.replace('$', '').replace(',', '');
+    salary = Number(salary);
+    if(document.getElementById("employee_type").value != 1){
+        if(salary>2600){
+          Swal.fire({
+              title: "Advertencia",
+              text: `Estas agregando $${salary} de salario al empleado`,
+              icon: "info"
+          });
+      }
+    }
+  }
+
+function alert_sdi_salary(min_salary){
+ let salary = document.getElementById('sdi_imss').value.trim();
+    salary = salary.replace('$', '').replace(',', '');
+    salary = Number(salary);
+    if(document.getElementById("employee_type").value != 4){
+        if(salary<min_salary){
+          document.getElementById('sdi_imss').value = min_salary
+          Swal.fire({
+              title: "Advertencia",
+              text: `No puedes ingresar un salario sdi menor al minimo: ${min_salary}`,
+              icon: "info"
+          });
+      }
+    }
+  }
+
+function calculate_min_salary(){
+     const frontiers = [
+                "Agua Prieta",
+                "Altar",
+                "Caborca",
+                "Cananea",
+                "General Plutarco Elías Calles",
+                "Naco",
+                "Nogales",
+                "Puerto Peñasco",
+                "San Luis Río Colorado",
+                "Santa Cruz",
+                "Sáric",
+                "Ascensión",
+                "Coyame del Sotol",
+                "Guadalupe",
+                "Janos",
+                "Juárez",
+                "Manuel Benavides",
+                "Ojinaga",
+                "Praxedis G. Guerrero",
+                "Acuña",
+                "Guerrero",
+                "Hidalgo",
+                "Jiménez",
+                "Nava",
+                "Ocampo",
+                "Piedras Negras",
+                "Zaragoza",
+                "Anáhuac",
+                "Ensenada",
+                "Mexicali",
+                "Playas de Rosarito",
+                "Tecate",
+                "Tijuana",
+                "Camargo",
+                "Guerrero",
+                "Gustavo Díaz Ordaz",
+                "Matamoros",
+                "Mier",
+                "Miguel Alemán",
+                "Nuevo Laredo",
+                "Reynosa",
+                "Río Bravo",
+                "Valle Hermoso"
+            ];
+    const city = $('#location option:selected').text();
+    const salary_frontier = parseFloat('{{ base_salary_frontier }}')
+    const salary_general = parseFloat('{{ base_salary_general }}')
+    const payroll_week = ['3','7','8','13']
+    const payroll_15 = ['9','10','11']
+    let payroll_type;
+    if(payroll_week.includes(document.getElementById('payroll_id').value)){
+        payroll_type = 7
+    }else if(payroll_15.includes(document.getElementById('payroll_id').value)){
+        payroll_type = 15
+    }else{
+        payroll_type = 0;
+    }
+    let salary = frontiers.includes(city.trim())? salary_frontier*payroll_type : salary_general*payroll_type;
+    let min_salary = frontiers.includes(city.trim())? salary_frontier : salary_general;
+    return [salary.toFixed(2), min_salary];
+}
+$('#employee_type').change(function(){
+    if(document.getElementById('employee_type').value =='2'){
+        document.getElementById('salary_div').style.display = 'none';
+        document.getElementById('sdi_imss_div').style.display = 'none';
+        document.getElementById('salary').value = 0
+        document.getElementById('sdi_imss').value = 0
+    }else{
+        document.getElementById('salary_div').style.display = 'inline';
+        document.getElementById('sdi_imss_div').style.display = 'inline';
+    }
+    if(document.getElementById('employee_type').value == '1'){
+        get_json_staff_tradenames()
+    }else{
+        get_json_tradenames()
+    }
+})
+$('#payroll_id').change(function (){
+    document.getElementById('salary').value = calculate_min_salary()[0]
+})
+$('#salary').change(function (){
+    alert_salary(calculate_min_salary()[0])
+    alert_max_salary()
+})
+$('#sdi_imss').change(function (){
+    alert_sdi_salary(calculate_min_salary()[1])
+})
+$('#employee_type').change(function(){
+    alert_salary(calculate_min_salary()[0])
+})
+$('#location').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+$('#location').on('change',function(){
+    document.getElementById('salary').value = calculate_min_salary()[0]
+    document.getElementById('sdi_imss').value = calculate_min_salary()[1]
+});
+$('#state').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+$('#birth_date').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+$('#birth_date').change(function() {
+    const state = $("#state");
+    let curp = calcularCurp();
+    document.getElementById('curp').value = curp;
+    document.getElementById('rfc').value = curp.substring(0, 10);
+    var state_id = state.val();
+    get_json_city(state_id);
+});
+$('#date_start').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+$('#salary').maskMoney({prefix: '$'})
+$('#sdi_imss').maskMoney({prefix: '$'})
+$('#bonus').maskMoney({prefix: '$'})
+//$("#salary").inputmask('currency',{rightAlign: true  });
+//$("#sdi_imss").inputmask('currency',{rightAlign: true  });
+
+function updateCURP(){
+    var state = $("#state");
+    let curp = calcularCurp();
+    document.getElementById('curp').value=curp;
+    document.getElementById('rfc').value=curp.substring(0, 10);
+    var state_id = state.val();
+    get_json_city(state_id)
+}
+
+
+$(function () {
+    // Obtener los elementos del HTML
+var state = $("#state");
+var location_state = $("#location_state");
+// Agregar un evento de cambio al primer input para actualizar el segundo input
+state.on("change", function() {
+    document.getElementById("city_id").innerHTML=""
+    var curp = calcularCurp();
+    validate_backlist(curp)
+    document.getElementById('curp').value=curp;
+    document.getElementById('rfc').value=curp.substring(0, 10);
+    var state_id = state.val();
+    get_json_city(state_id)
+    document.getElementById('name').addEventListener('change',function(){
+        updateCURP()
+    })
+    document.getElementById('last_name').addEventListener('change',function(){
+        updateCURP()
+    })
+    document.getElementById('middle_name').addEventListener('change',function(){
+        updateCURP()
+    })
+    document.getElementById('birth_date').addEventListener('change',function(){
+        updateCURP()
+    })
+    document.getElementById('gender').addEventListener('change',function(){
+        updateCURP()
+    })
+});
+
+location_state.on("change", function() {
+    document.getElementById("location").innerHTML=""
+    var location_state_id = location_state.val();
+    get_json_city_locations(location_state_id)
+    document.getElementById('salary').value = calculate_min_salary()[0]
+});
+
+$('#infonavit').on("change", function() {
+    infonavit =$('#infonavit').val()
+    if (infonavit==1){
+        $('.have-infonavit').show()
+    }else{
+        $('.have-infonavit').hide()
+    }
+});
+$('#percent_pension').on("change", function() {
+    infonavit =$('#percent_pension').val()
+    if (infonavit!=''){
+        $('.have-pension').show()
+    }else{
+        $('.have-pension').hide()
+    }
+});
+    $.validator.setDefaults({
+      submitHandler: function () {
+        alert( "Form successful submitted!" );
+      }
+    });
+    $('#addForm').validate({
+      ignore: '.select2-input, .select2-focusser',
+      rules: {
+        employee_number: {
+          required: true
+        },
+        clients_trade_name_id: {
+          required: true
+        },
+        date_start: {
+          required: true
+        },
+        gender: {
+          required: true
+        },
+      },
+      messages: {
+        employee_number: {
+          required: "El campo es requerido"
+        },
+        password: {
+          required: "Please provide a password",
+          minlength: "Your password must be at least 5 characters long"
+        },
+        terms: "Please accept our terms"
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      }
+    });
+    var inp1 = document.getElementById("bank_account");
+    inp1.addEventListener("input", function () {
+        document.getElementById("bank_card_number").disabled = this.value != "";
+    });
+    var inp2 = document.getElementById("bank_card_number");
+    inp2.addEventListener("input", function () {
+        document.getElementById("bank_account").disabled = this.value != "";
+    });
+    $(document.body).on("change","#percent_pension,#salary",function(){
+        calculate_pension()
+    });
+
+  });
+
+ function calculate_pension(){
+     percent_pension = document.getElementById("percent_pension").value
+     salary = $('#salary').maskMoney('unmasked')[0]
+     if(salary !=''){
+        pension =  (percent_pension * salary )/100
+        document.getElementById("pension").value = pension;
+     }
+     if(percent_pension==''){
+         document.getElementById("pension").value = '';
+     }
+ }
+ function get_json_city_locations(location_state_id){
+      var city_location = document.getElementById("location");
+      $.getJSON('/city/list/'+location_state_id, function (data) {
+                $.each(data, function (i, element) {
+                    var opcion = document.createElement("option");
+                    opcion.value = element.id;
+                    opcion.text = element.name;
+                    city_location.appendChild(opcion);
+                })
+          document.getElementById('sdi_imss').value = calculate_min_salary()[1]
+            }
+        );
+    }
+    function get_json_staff_tradenames(){
+     var clients = document.getElementById("clients_trade_name_id");
+      document.getElementById('clients_trade_name_id').innerHTML = '';
+     $.getJSON('staff-trade/list',function(data){
+         var opcion = document.createElement("option");
+         clients.appendChild(opcion)
+         $.each(data, function(i, element) {
+             var opcion = document.createElement("option");
+            opcion.value = element.id;
+            opcion.text = element.trade_name;
+            clients.appendChild(opcion);
+         })
+     })
+    }
+
+    function get_json_tradenames(){
+     var clients = document.getElementById("clients_trade_name_id");
+      document.getElementById('clients_trade_name_id').innerHTML = '';
+     $.getJSON('trade-names/list',function(data){
+         var opcion = document.createElement("option");
+         clients.appendChild(opcion)
+         console.log(data)
+         $.each(data, function(i, element) {
+             var opcion = document.createElement("option");
+            opcion.value = element.id;
+            opcion.text = element.trade_name;
+            clients.appendChild(opcion);
+         })
+     })
+    }
+
+function validate_backlist(curp) {
+    axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            url: '/validate/blacklist',
+            data: {curp:curp}
+        }).then(function (response) {
+            //toastr.success(response.data)
+        }).catch(function (error) {
+            document.getElementById("addForm").reset();
+            Swal.fire({
+              icon: 'warning',
+              title: 'Oops...',
+              text: error.response.data
+
+            })
+        });
+
+}
+
+  function register(e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        var data_form = new FormData(form);
+        data_form.set('salary',$('#salary').maskMoney('unmasked')[0]);
+        data_form.set('sdi_imss',$('#sdi_imss').maskMoney('unmasked')[0]);
+        data_form.set('bonus',$('#bonus').maskMoney('unmasked')[0]);
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employees/crud/add',
+                data: data_form
+            }).then(function (response) {
+                toastr.success(response.data)
+                window.location.href = "/employees/all";
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+        }
+    }
+
+
+
+    function get_json_city(state_id){
+      var city = document.getElementById("city_id");
+      $.getJSON('/city/list/'+state_id, function (data) {
+                $.each(data, function (i, element) {
+                    var opcion = document.createElement("option");
+                    opcion.value = element.id;
+                    opcion.text = element.name;
+                    city.appendChild(opcion);
+                })
+            }
+        );
+    }
+
+  </script>
+
+{% endblock javascripts %}

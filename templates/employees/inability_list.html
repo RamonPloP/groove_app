@@ -1,0 +1,370 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista de incapacidades {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fas  fa-building nav-icon"></i> Listado de incapacidades</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+      <div class="card">
+          <!-- Content Header (Page header) -->
+                  <div class="card-header">
+                    <h3 class="card-title">Filtros</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <form id="filter" method="post">
+                      <div class="card-body row">
+                                <div class="col-md-3 offset-9">
+                                    <div  class="form-group">
+                                        <label for="credit_value">Estatus</label>
+                                        <select name="status" id="status_filter" class="form-control " style="width: 100%;">
+                                            <option  value ="2" selected="selected" >Todos</option>
+                                            <option value ="1" >Activo</option>
+                                            <option value ="0" >Finalizado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 offset-md-9">
+                                    <button type="button" class="btn btn-primary float-right"  data-toggle="modal"  onclick="filter(event) " data-target="#modal-default">
+                                      Buscar
+                                    </button>
+                                </div>
+                              </div>
+                      </form>        <!-- /.card-body -->
+                    </div>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Incapacidades de empleados</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="datatable_list" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>CURP</th>
+                    <th>NOMBRE</th>
+                    <th>FOLIO</th>
+                    <th>INICIAL O SUBSECUENTE</th>
+                    <th>DIAS</th>
+                    <th>FECHA INICIO</th>
+                    <th>FECHA FIN</th>
+                    <th>TIPO</th>
+                    <th>STATUS</th>
+                      <th>REGISTRO PATRONAL</th>
+                      <th>NSS</th>
+                    <th>ACCIONES</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <!-- Modal -->
+        <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="data_modal"
+             aria-hidden="true">
+        </div>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Moment -->
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+  <!-- bs-custom-file-input -->
+  <script src="/static/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+  <!-- page script -->
+  <script>
+   $(function() {
+      get_data('/inabilities/list/filters');
+    });
+     function show_info(id, button) {
+        $(button).attr('disabled', true);
+        axios({
+            method: 'get',
+            url: '/employee/modal-edit/settlement/' + id
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+        }).finally(function () {
+            $(button).attr('disabled', false);
+        });
+
+
+    }
+    function register(e) {
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                url: '/employerregistration/crud',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response, { timeOut: 9500 })
+                get_data('/employerregistration/list?page=0')
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                $("#create_button").prop("disabled", false)
+                console.log(error.response)
+            }).finally(function () {
+                $("form :input").prop("readonly", false)
+                $('form select').css('pointer-events', 'all')
+            });
+        }
+    }
+
+function filter(e) {
+        e.preventDefault()
+        var status = $('#status_filter').val()
+        $.getJSON('/inabilities/list/filters',{
+        status:status
+         }, function (data) {
+                update_table(data)
+            }
+        );
+    }
+
+     /*Funtion to get de data in json and pass to the datatable*/
+function get_data(url) {
+        $.getJSON(url, function (data) {
+            update_table(data);
+            }
+        );
+    }
+
+    function verify_date(){
+        const table = document.getElementById("datatable_list");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            const value = cells[7].textContent || cells[7].innerText;
+            const status = cells[9].textContent || cells[9].innerText;
+            const date = new Date();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const formattedDate = `${day}/${month}/${year}`;
+
+           var fechafin = moment(value, "DD/MM/YYYY");
+            var fechahoy = moment(formattedDate, "DD/MM/YYYY");
+            const diff = fechafin.diff(fechahoy, 'days');
+            if (diff <3 && diff >0 && status == "ACTIVO"){
+             rows[i].classList.add("bg-warning", "color-palette");
+            }
+            if( diff<0 && status == "ACTIVO"){
+                rows[i].classList.add("bg-danger", "color-palette");
+            }
+        }
+    }
+/*Funtion to generate de datatable and fill whit de json data */
+
+function update_table(data) {
+    banks = []
+    $.each(data, function (i, element) {
+        bank = []
+        bank.push(element.id)
+        bank.push(element.curp)
+        bank.push(element.name)
+        bank.push(element.folio)
+        bank.push(element.initial_subsequent)
+        bank.push(element.number_days)
+        bank.push(element.date_start)
+        bank.push(element.date_end)
+        bank.push(element.type)
+        if(element.status == 1){
+            bank.push('ACTIVO');
+        }else{
+            bank.push('FINALIZADO');
+        }
+        bank.push(element.employerregistration)
+        bank.push(element.nss)
+        if(element.url_inability_photo==null){
+            var view_button = ""
+        }else{
+            var view_button = '<a type="button" class="btn btn-outline-dark" href="'+element.url_inability_photo+'">'+
+                            '<i class="fas fa-eye"></i>'+
+                        '</a>'
+        }
+        if(element.status == 1){
+            bank.push('<button type="button" class="btn btn-outline-primary" onclick="add_photo_modal('+element.id +', this)">'+
+                            '<i class="fas fa-upload"></i>'+
+                        '</button>'+view_button+'<button type="button" class="btn btn-outline-success" onclick="change_status('+element.id +', this)">'+
+                            '<i class="fas fa-check"></i>'+
+                        '</button>')
+        }else{
+            bank.push(view_button)
+        }
+        banks.push(bank)
+    })
+    $('#datatable_list').DataTable().clear();
+    $('#datatable_list').DataTable().destroy();
+    $('#datatable_list').DataTable({
+        dom: 'lBfrtip',
+          "buttons": [
+            'excel'
+          ],
+        responsive: true,
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+        },
+        order: [[7, 'desc']],
+        data: banks,
+        columns: [
+            {title: "ID"},
+            {title: "CURP"},
+            {title: "NOMBRE"},
+            {title: "FOLIO"},
+            {title: "INICIAL O SUBSECUENTE"},
+            {title: "DIAS"},
+            {title: "FECHA INICIO"},
+            {title: "FECHA FIN"},
+            {title: "TIPO"},
+            {title: "STATUS"},
+            {title: "REGISTRO PATRONAL"},
+            {title: "NSS"},
+            {title: "ACCIONES"}
+        ],
+        "drawCallback": function() {
+            verify_date();
+        }
+    });
+}
+
+function change_status(id){
+    axios({
+        method: "post",
+        url: '/employee/change_inhability_status/'+id
+    }).then(function(response){
+        toastr.success(response.data, { timeOut: 9500 })
+        get_data('/inabilities/list/filters');
+    }).catch(function(error){
+        toastr.error(error.response.data);
+        console.log(error.response);
+    }
+    )
+}
+
+ function register_photo(e) {
+        e.preventDefault()
+        var photo = $('#photo').val();
+        if(photo=='')
+        {
+            toastr.error('Selecciona una imagen, el campo no puede ir vacio')
+            return false;
+        }
+        var form_data = new FormData();
+        form_data.append('photo', $('#photo').prop('files')[0]);
+        form_data.append('employee_inability_id', $('#employee_inability_id').val());
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            url: '/employees/inability/photo/add',
+            data: form_data
+        }).then(function (response) {
+            toastr.success(response.data, { timeOut: 9500 })
+            get_data('/inabilities/list/filters');
+            $('#data_modal').modal("hide")
+        }).catch(function (error) {
+            toastr.error(error.response.data)
+            console.log(error.response)
+        }).finally(function () {
+            $("form :input").prop("readonly", false)
+            $('form select').css('pointer-events', 'all')
+        });
+    }
+
+     function add_photo_modal(id, button) {
+
+        axios({
+            method: 'get',
+            url: '/employees/inability/photo/add/' + id
+        }).then(function (response) {
+            $('#data_modal').html(response.data)
+            bsCustomFileInput.init();
+            $('#data_modal').modal("show")
+        }).catch(function (error) {
+            console.log(error)
+        }).finally(function () {
+            $(button).attr('disabled', false);
+        });
+
+    }
+  </script>
+
+{% endblock javascripts %}

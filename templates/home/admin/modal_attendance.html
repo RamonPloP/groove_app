@@ -1,0 +1,159 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+          {% if modal_type == 'attendance' %}
+          Agregar Asistencia
+          {% elif modal_type == 'absence' %}
+          Agregar Falta
+          {% endif %}
+          <br>{{ employee }}</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <input type="text" name="employee_id" class="form-control" id="employee_id" placeholder="id del empleado" value="{{employee_id}}" required hidden>
+        <div class="modal-body">
+            <div class="col-md-12" id="selects">
+                <div class="form-group">
+                    <label for="name">
+                    {% if modal_type == 'attendance' %}
+                      Tipo de asistencia
+                      {% elif modal_type == 'absence' %}
+                      Tipo de Falta
+                      {% endif %}
+                    </label>
+                    <select name="type" id="type" class="form-control " onchange="delay_options()" style="width: 100%;">
+                        {% if modal_type == 'attendance' %}
+                            <option value ="1" selected="selected" >Asistencia</option>
+                            <option value ="5" >Con Retardo</option>
+                            <option value ="6" >Permiso con goce de sueldo</option>
+                            <option value ="9" >Permiso sin goce de sueldo</option>
+                            <option value ="7" >Vacaciones</option>
+                            <option value ="8" >Descanso</option>
+                        {% elif modal_type == 'absence' %}
+                            <option value ="3" selected="selected" >Falta Injustificada</option>
+                            <option value ="4" >Falta Justificada</option>
+                        {% elif modal_type == 'extra_time' %}
+                            <option value ="2" selected="selected" >Tiempo Extra</option>
+                        {% endif %}
+                    </select>
+                </div>
+            <div class="form-group" id="hiden_options_permission" style="display: none;">
+                    <label for="permission_type">Tipo de permiso</label>
+                    <select name="permission_type" id="permission_type" class="form-control " style="width: 100%;">
+                            <option value="" selected disabled>Selecciona una opción</option>
+                            <option value ="Por paternidad">Por paternidad</option>
+                            <option value ="Muerte de mamá">Muerte de mamá</option>
+                            <option value ="Muerte de papá">Muerte de papá</option>
+                            <option value ="Muerte de hermano">Muerte de hermano</option>
+                            <option value ="Muerte hermano">Muerte hermano</option>
+                            <option value ="Muerte conyugue">Muerte conyugue</option>
+                            <option value ="Muerte hijos">Muerte hijos</option>
+                    </select>
+            </div>
+{#            -----------------------------------------------------#}
+            <div class="form-group" id="hiden_options" style="display: none;">
+                    <label for="name">Cantidad de retardo</label>
+                    <select name="delay" id="delay" class="form-control " style="width: 100%;">
+                            <option value="" selected disabled>Selecciona una opción</option>
+                            <option value ="1-15 min" selected="selected" >1-15 min</option>
+                            <option value ="16-30 min" >16-30 min</option>
+                            <option value ="31-120 min" >31-120 min</option>
+                            <option value ="121 o más" >121 o más</option>
+                    </select>
+            </div>
+{#            -----------------------------------------------------#}
+                <div class="form-group">
+                    <label for="name">Turno</label>
+                    <select name="turn" id="turn" class="form-control " style="width: 100%;">
+                        <option value ="1" selected="selected" >Diurno</option>
+                        <option value ="2" >Nocturno</option>
+                        <option value ="3" >Intermedio</option>
+                    </select>
+                </div>
+             {% if modal_type == 'extra_time' %}
+                  <div class="form-group">
+                                <label for="clients_trade_name_id">Cliente <code>*</code> </label>
+                                <select name="clients_trade_name_id_p" id="clients_trade_name_id_p" class="form-control select2" style="width: 100%;" required>
+                                    <option></option>
+                                    {% for data in clients %}
+                                        {% for tradeName in data.clients_Trade_name %}
+                                            {% if tradeName.status == '1'  %}
+                                              <option value ="{{ tradeName.id }}" >{{ data.business_name }} | {{ tradeName.trade_name }}  </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                 <div class="form-group">
+                    <label for="name">Catidad de horas</label>
+                    <select name="hrs_extra_time" id="hrs_extra_time" class="form-control " style="width: 100%;">
+                        <option value ="1" selected="selected" >1</option>
+                        <option value ="2" >2</option>
+                        <option value ="3" >3</option>
+                        <option value ="4" >4</option>
+                        <option value ="5" >5</option>
+                        <option value ="6" >6</option>
+                        <option value ="7" >7</option>
+                        <option value ="8" >8</option>
+                        <option value ="9" >9</option>
+                        <option value ="10" >10</option>
+                        <option value ="11" >11</option>
+                        <option value ="12" >12</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="clients_trade_name_id">Motivo de tiempo extra <code>*</code> </label>
+                    <select name="reason_extra_time_id" id="reason_extra_time_id" class="form-control select2" style="width: 100%;" required>
+                        <option value="">Selecciona una opción</option>
+                        {% for data in reason_extra_time %}
+                            <option value ="{{ data.id }}" > {{ data.name }}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                 <div class="form-group">
+                    <label for="observations">Observaciones</label>
+                    <textarea rows="4" type="text" name="observations" class="form-control" id="observations" placeholder="Observaciones"></textarea>
+                </div>
+            {% endif %}
+            <div class="form-group">
+                    <label for="date">
+                        {% if modal_type == 'attendance' %}
+                      Fecha de asistencia
+                      {% elif modal_type == 'absence' %}
+                      Fecha de Falta
+                      {% endif %}
+                    </label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register(event,'/admin/attendance/add/')">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+    function delay_options(){
+        const option = document.getElementById('type').value;
+        if(option == '5'){
+            document.getElementById('hiden_options').style.display = "block";
+        }else{
+            document.getElementById('hiden_options').style.display = "none";
+        }
+        if(option == '6'){
+            document.getElementById('hiden_options_permission').style.display = "block";
+        }else{
+            document.getElementById('hiden_options_permission').style.display = "none";
+        }
+    }
+    $('#clients_trade_name_id_p').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true})
+</script>

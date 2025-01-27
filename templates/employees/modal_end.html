@@ -1,0 +1,56 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Dar de baja empleado {{employee.employee_number }} </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <p>{{ employee.name }} {{ employee.last_name }} {{ employee.middle_name }}</p>
+                        <label for="name">Fecha de alta</label>
+                        <p>{{ employee_rh.date_start.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="name">Fecha de baja Finiquito</label>
+                        <input type="date" name="date_end" class="form-control" id="date_end" placeholder="Fecha de baja Finiquito" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Fecha de baja IMSS</label>
+                        <input type="date" name="date_end_imss" class="form-control" id="date_end_imss" placeholder="Fecha de baja IMSS" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reasons_leave">Motivo de baja</label>
+                        <select name="reasons_leave" id="reasons_leave" class="form-control " style="width: 100%;" required>
+                            <option selected="selected" value="">Selecciona una opción</option>
+                            {% for data in reasons_leave %}
+                                <option value ="{{ data.id }}" >{{ data.name }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                     <div class="form-group">
+                        <label for="name">Notas</label>
+                         <textarea type="date" maxlength="700" name="leave_description" class="form-control" id="leave_description" placeholder="Notas" value="" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register_end({{employee.id}},event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

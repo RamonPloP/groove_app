@@ -1,0 +1,107 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Constancia de vacaciones: </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" action="/employees/vacation-constancy" method="post">
+         <input type="text" name="employee_id" class="form-control" id="employee_id" value="{{ employee.id }}"  required hidden>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="name">Periodo</label>
+                     <select name="vacation_period" id="vacation_period" class="form-control " style="width: 100%;">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Vacaciones</label>
+                    <select name="vacations" id="vacations" class="form-control "></select>
+                    <input name="vacation_id" id="vacation_id" hidden>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary">Generar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+    function generatePeriodDateSelect() {
+        var currentYear = new Date().getFullYear();
+        var select = document.getElementById("vacation_period");
+        select.innerHTML = "";
+        for (var i = currentYear - 1; i <= currentYear + 1; i++) {
+            var startYear = i;
+            var endYear = i + 1;
+            var opcion = document.createElement("option");
+            opcion.text = startYear + "-" + endYear;
+            opcion.value = startYear + "-" + endYear;
+            select.add(opcion);
+        }
+    }
+    $('#addForm').closest('.modal').on('shown.bs.modal', function () {
+        generatePeriodDateSelect();
+        get_info();
+    });
+
+    document.getElementById('vacations').addEventListener('change',function(){
+        document.getElementById("vacation_id").value = document.getElementById("vacations").options[document.getElementById("vacations").selectedIndex].getAttribute("data-id");
+    })
+
+    document.getElementById('vacation_period').addEventListener('change',function(){
+        get_info().then(() => {
+             document.getElementById("vacation_id").value = document.getElementById("vacations").options[document.getElementById("vacations").selectedIndex].getAttribute("data-id");
+        }).catch((error) => {
+            console.log(error);
+        });
+    })
+
+function get_info() {
+    return new Promise((resolve, reject) => {
+        let period = document.getElementById('vacation_period').value;
+        const url = '/vacations/add/vacations-period/' + {{ employee.id }} + '/' + period;
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            url: url
+        }).then(function(response) {
+            const data = response.data[0];
+            console.log(data);
+            let select = document.getElementById("vacations");
+            select.innerHTML = ''; // Clear existing options
+            data.forEach((element) => {
+                let opcion = document.createElement("option");
+                let daysArray = JSON.parse(element.days);
+                opcion.text = daysArray[0] + " - " + daysArray[daysArray.length - 1] + " | " + element.number_of_days + " días";
+                opcion.value = daysArray[0] + "-" + daysArray[daysArray.length - 1];
+                opcion.setAttribute("data-id", element.id);
+                select.add(opcion);
+            });
+            resolve();
+        }).catch(function(error) {
+            reject(error);
+        });
+    });
+}
+
+document.getElementById('addForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if($('#vacations').val()) {
+        this.submit();
+    }else{
+        swal.fire({
+            icon: 'warning',
+            title:'Oops...',
+            text: 'No hay vacaciones en este periodo'
+        })
+    }
+});
+</script>

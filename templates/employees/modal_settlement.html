@@ -1,0 +1,46 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Generar carta de finiquito: </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" action="/employees/settlement" method="post">
+         <input type="text" name="employee_id" class="form-control" id="employee_id" placeholder="Fecha de alta" value="{{ employee.id }}"  required hidden>
+        <div class="modal-body">
+            {% if not settlement %}
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="name">Prima Vac. periodo anterior</label>
+                    <input type="number" name="prima_before" class="form-control" id="prima_before" placeholder="Prima Vac. periodo anterior" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Dias pendientes</label>
+                    <input type="number" name="pending_salary" class="form-control" id="pending_salary" placeholder="Dias pendinetes" value="" required>
+                </div>
+                <div class="form-group" hidden>
+                    <label for="name">Compensación.</label>
+                    <input type="text" name="gratification_90" class="form-control" id="gratification_90" placeholder="Compensacion" value="" >
+                </div>
+                <div class="form-group" hidden>
+                    <label for="name">Prestamo empresa</label>
+                    <input type="text" name="borrowing" class="form-control" id="borrowing" placeholder="Prestamo empresa" value="" >
+                </div>
+                <div class="form-group">
+                    <label for="name">(-) Prestamo/Adeudo Empresa</label>
+                    <input type="number" name="debts" class="form-control" id="debts" placeholder="(-) Prestamo/Adeudo Empresa" value="" required>
+                </div>
+                <p>NOTIFICACION: Al Responsable de redactar, elaborar y revisar este documento y que, por una accion y/o omision, error o negligencia se derogue en pagos una cantidad de dinero que perjudique a nuestra empresa, dicho monto le sera descontado via nomina, ademas de otras sanciones aplicables segun la gravedad de la misma aplicando el Reglamento Interior de Trabajo.</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary">Generar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

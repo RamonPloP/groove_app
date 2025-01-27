@@ -1,0 +1,201 @@
+<style>
+    * {
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact !important;                 /* Firefox 48 – 96 */
+    print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+}
+    .container{
+        width:451.9px;
+        height:345.9px;
+        border: solid 1px #000;
+        background-image: url("/static/assets/img/id-card-bg.png");
+        background-size: contain;
+    }
+    p{
+        font-size: 10px;
+    }
+    span{
+        font-size: 8px;
+        font-weight: bold;
+    }
+    div{
+        font-family: sans-serif;
+    }
+    .logo{
+
+            width: 50px;
+
+
+    }
+    .logo_container img {
+            margin: auto;
+            display: block;
+            margin-top: 10px;
+    }
+    .logo_container_photo img{
+            margin: auto;
+            display: block;
+            margin-top: 10px;
+    }
+    .edetails p strong {
+    font-size: 14px;
+}
+        .top img
+        {
+            height: 60px;
+            width:60px;
+            background-color:#e6ebe0;
+            position: absolute;
+            top: 85px;
+            left: 260px;
+            border:3px solid rgba(255 , 255 , 255 , .2);
+
+        }
+        .edetails
+        {
+            text-align: center;
+            margin-top: 10px;
+            top: 160px;
+            text-transform:capitalize;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        .compani_name{
+            float: right;
+            margin-right: 15px;
+            margin-top: 30px;
+            font-size: 12px;
+            font-family: "Calibri", sans-serif;
+        }
+        .compani_name span{
+            color: #9f8a47;
+            font-size: 12px;
+            font-weight: bold;
+
+        }
+
+        .parent {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+        width:451.9px;
+        height:345.9px;
+        border: solid 1px #000;
+        /*background-image: url("/static/assets/img/id-card-bg.png");*/
+        background-size: contain;
+        position: relative;
+}
+   .row {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: 1fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+   }
+.div1 { grid-area: 1 / 1 / 2 / 2;
+            /*margin-top: 5px;*/
+    border-right: 1px solid;
+}
+.div2 { grid-area: 1 / 2 / 2 / 3;
+    /*margin-top: 5px;*/
+    background-image: url("/static/assets/img/id-card-bg-cpi.png");
+    background-size: cover;
+}
+.div1{
+        border-bottom: 10px solid #9f8a47;
+}
+
+.div2{
+        border-bottom: 10px solid #000;
+}
+.signature{
+    width: 80px;
+}
+.center{
+    text-align: center;
+    margin-top: 30px;
+}
+.bottom{
+
+    padding-left: 5px;
+    font-weight: bold;
+     position: absolute;
+     bottom: 15px;
+}
+.bottom p {
+    line-height: .5;
+}
+
+.top{
+    padding-left: 5px;
+}
+.top p {
+    line-height: .5;
+}
+.row {
+	  display: flex;
+	}
+	.column {
+	  flex: 50%;
+	  padding: 10px;
+	}
+    .huella{
+            border: solid 1px;
+            height: 70px;
+    }
+    .firma{
+         border-bottom: solid 1px;
+         height: 70px;
+    }
+    .photo {
+    width: 80px;
+    background-color: #e6ebe0;
+    border: 3px solid rgba(255 , 255 , 255 , .2);
+}
+</style>
+
+
+
+<div class="parent">
+    <div class="div1">
+        <div class="top">
+            <p><span>CURP:</span> {{ employee.curp }}</p>
+            <p><span>Número de IMSS:</span>  {{ employee.nss }} </p>
+            <p><span>Registro Patronal:</span> {{ employerregistration.employer_registration_number }} </p>
+        </div>
+        <div class="center">
+            <img  class="signature" src="/static/assets/img/firma.png">
+            <p>LIC. ALVARO ESCOBEDO PADILLA</p>
+            <p><small>Director Operativo y Capital Humano</small></p>
+            <strong><p>Vigencia: DICIEMBRE {{ year }}</p></strong>
+            <img  class="signature" src="/static/assets/img/icono2.png">
+        </div>
+        <div class="bottom">
+            <p><small>C.P.I SEGURIDAD PRIVADA S. DE R.L. DE C.V</small></p>
+            <p><small>TEL.614-421-85-97</small></p>
+            <p><small>cpiseguridad.com</small></p>
+        </div>
+    </div>
+    <div class="div2 ">
+        <div class="logo_container">
+            <img class="logo"  src="/static/assets/img/logo_cpi.png">
+        </div>
+        <div class="logo_container_photo" >
+            <img class="photo" src="{{ employee.photo or '/static/assets/img/policeman.png'}}">
+        </div>
+        <div class="edetails">
+            <p><small>ACREDITA A:</small></p>
+            <p><strong>{{ employee.name }} {{ employee.last_name }} {{ employee.middle_name }}</strong> </p>
+            <p style="line-height: .5;"><span>Puesto:</span> {{ employee.position.name }}</p>
+            <p style="line-height: .5;"><span>Fecha de ingreso:</span>{{ employee_start_date.date_start.strftime("%d/%m/%Y") }}</p>
+        </div>
+        <div class="bottom">
+            <p><small>Secretaría de Seguridad y Protección Ciudadana</small></p>
+            <p><small>Dirección General de Seguridad Privada</small></p>
+            <p><small>Permiso Federal DGSP/228-16/3184</small></p>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirmacion de generar tarjeta</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="employer_registration_id">Registro patronal <code>*</code> </label>
+                    <select name="employer_registration_id" id="employer_registration_id" class="form-control select2" style="width: 100%;" required>
+                        <option selected="selected" value="">Selecciona una opción</option>
+                        {% for data in employerregistration %}
+                            <option value ="{{ data.id }}" >{{ data.name }}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="form-group">
+                    <label for="employer_registration_id">Formato de credencial<code>*</code> </label>
+                    <select name="template_id" id="template_id" class="form-control select2" style="width: 100%;">
+                        <option value="1">FIDES</option>
+                        <option value="2">CPI</option>
+                      </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <a type="submit" onclick="window.location.href='/employee/idcard/{{ employee_id }}?employerregistration_id='+$('#employer_registration_id').val()+'&template_id='+$('#template_id').val()"  class="btn btn-primary">Generar</a>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+
+<script>
+
+</script>

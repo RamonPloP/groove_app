@@ -11,7 +11,7 @@ def is_admin(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if hasattr(flask_login.current_user, "id") and \
-                flask_login.current_user.role in [Role.ADMIN, Role.SUPER_ADMIN]:
+                flask_login.current_user.role in [Role.ADMIN]:
             return func(*args, **kwargs)
         return render_template('home/page-401.html'), 401
 

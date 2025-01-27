@@ -134,30 +134,16 @@
     function update_table(data) {
         users = []
         $.each(data, function (i, element) {
+            const current_user_id = {{ current_user.id }}
             user = []
             user.push(element.id)
             user.push(element.name)
             user.push(element.username)
-            if (element.role ==0) {
+            if (element.role == 'ADMIN') {
                 user.push('Administrador')
             }
-            else if (element.role ==1) {
-                user.push('RH')
-            }
-            else if (element.role ==3) {
-                user.push('SUPERVISOR')
-            }
-             else if (element.role ==4) {
-                user.push('RH Y SUPERVISOR')
-            }
-             else if (element.role ==5) {
-                user.push('SUPER ADMINISTRADOR')
-            }
-             else if (element.role ==6) {
-                user.push('CONTROL DE VEHICULOS')
-            }
-             else if (element.role ==7) {
-                user.push('ADMIN DE SUPERVISOR')
+            else if (element.role =='USER') {
+                user.push('Usuario')
             }
 
             if (element.status == 1) user.push('Activo');
@@ -169,9 +155,13 @@
                                 '<i class="fas fa-check"></i>'+
                             '</button>';
             }else{
-                btn = '<button type="button" class="btn btn-outline-danger" title="Cambiar a inactivo" onclick="changeInactive('+element.id +')">'+
+                if(current_user_id == element.id){
+                    btn = ''
+                }else{
+                    btn = '<button type="button" class="btn btn-outline-danger" title="Cambiar a inactivo" onclick="changeInactive('+element.id +')">'+
                                 '<i class="fas fa-times"></i>'+
                             '</button>';
+                }
             }
 
             user.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
@@ -253,7 +243,7 @@
             $("#create_button").prop("disabled", true)
             axios({
                 method: 'post',
-                url: '/users/crud ',
+                url: '/users/crud',
                 data: new FormData(form)
             }).then(function (response) {
                 toastr.success(response.data, { timeOut: 9500 })

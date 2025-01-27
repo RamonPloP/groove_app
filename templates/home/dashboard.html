@@ -5,11 +5,26 @@
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed {% endblock body_class %} 
 
-<!-- Specific Page CSS goes HERE  -->
+<!-- Specific Page CSS goes HERE -->
 {% block stylesheets %}
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+  <!-- Personalizada -->
+  <style>
+    @font-face {
+      font-family: 'Newpitch';
+      src: url('/static/assets/fonts/Newpitch.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    h1 {
+      font-family: 'Newpitch', sans-serif;
+    }
+  </style>
+
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
   <!-- overlayScrollbars -->
@@ -19,38 +34,23 @@
 
 {% endblock stylesheets %}
 
-{% block content %}  
+{% block content %}
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark"><i class="nav-icon fas fa-tachometer-alt"></i> Indicadores</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
+  <div class="content-wrapper d-flex flex-column align-items-center justify-content-center" style="position: relative; height: 100vh; background:
+      linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)), url('/static/assets/img/background-dashboard.jpg');
+      background-size: cover; background-position: center; background-repeat: no-repeat;">
 
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-
-      </div><!--/. container-fluid -->
-    </section>
-    <!-- /.content -->
+      <h1 style="font-family: Newpitch; color:white; font-size: 60px">Bienvenido a Lost in Groove BackOffice!</h1>
+      <div style="margin-top: 40px">
+          <img src="/static/assets/img/logo_favicon.jpg" class="img-circle" alt="User Image" style="height: 250px">
+      </div><!-- /.row -->
   </div>
   <!-- /.content-wrapper -->
 
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
+<!-- Specific Page JS goes HERE -->
 {% block javascripts %}
 
   <!-- REQUIRED SCRIPTS -->
@@ -74,11 +74,11 @@
   <script src="/static/assets/plugins/jquery-mapael/maps/mexico.js"></script>
   <!-- ChartJS -->
   <script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $(function() { $("[data-card-widget='collapse']").click(); })
-        });
-    </script>
+  <script type="text/javascript">
+      $(function () {
+          $(function() { $("[data-card-widget='collapse']").click(); })
+      });
+  </script>
   <!-- PAGE SCRIPTS -->
   <script src="/static/assets/js/pages/dashboard2.js"></script>
 

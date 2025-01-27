@@ -26,11 +26,22 @@ class Users(db.Model,UserMixin):
         return value
 
 
-    def __init__(self,name, username, password, status=1):
+    def __init__(self,name, username, password, role, status=1):
         self.name = name
         self.username = username
         self.password = password
+        self.role = role
         self.status = status
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'username': self.username,
+            'role': self.role.name if self.role is not None else None,
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None  # Convertir datetime a formato ISO
+        }
 
     @classmethod
     def get_all(cls):

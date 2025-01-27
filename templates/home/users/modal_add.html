@@ -16,19 +16,14 @@
                     </div>
                     <div class="form-group">
                         <label for="username">Correo <code>*</code></label>
-                        <input type="text" name="username" class="form-control" id="username" placeholder="Nombre de usuario"  required>
+                        <input type="email" name="username" class="form-control" id="username" placeholder="Nombre de usuario"  required>
                     </div>
                     <div class="form-group">
                         <label for="role">Rol <code>*</code> </label>
                         <select name="role" id="role" class="form-control" style="width: 100%;" aria-invalid="false" required>
-                            <option selected="selected">Selecciona una opción</option>
+                            <option selected="selected" value="">Selecciona una opción</option>
                             <option value="0">Administrador</option>
-                            <option value="1">RH</option>
-                            <option value="3">SUPERVISOR</option>
-                            <option value="4">RH Y SUPERVISOR</option>
-                            <option value="5">SUPER ADMINISTRADOR</option>
-                            <option value="6">CONTROL DE VEHICULOS</option>
-                            <option value="7">ADMIN DE SUPERVISOR</option>
+                            <option value="1">Usuario</option>
                           </select>
                     </div>
 
@@ -42,14 +37,6 @@
                         <label for="password2">Repetir contraseña <code>*</code></label>
                         <input type="password" name="password2" class="form-control" id="password2" placeholder="Contraseña"  required>
                     </div>
-                    <div class="form-group hidden-rh" hidden>
-                        <label for="role">Estados a los que pertenece <code>*</code> </label>
-                        <select name="multi_states[]" id="multi_states[]" class="form-control" multiple style="width: 100%;" aria-invalid="false" >
-                            {% for data in states %}
-                                 <option value="{{ data.id }}">{{ data.name }}</option>
-                            {% endfor %}
-                          </select>
-                    </div>
                 </div>
             </div>
         </div>
@@ -62,13 +49,3 @@
   <!-- /.modal-content -->
 </div>
 <!-- /.modal-dialog -->
-<script>
-     $('#role').on("change", function() {
-        role =$('#role').val()
-        if (role==1 || role==4){
-             $('.hidden-rh').removeAttr('hidden');
-        }else{
-             $(".hidden-rh").attr("hidden",true);
-        }
-    });
-</script>

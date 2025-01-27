@@ -1,4 +1,4 @@
-from flask import request, jsonify, make_response, Flask, render_template, Blueprint, redirect, url_for, jsonify, Response
+from flask import render_template, Blueprint, redirect, url_for
 from flask_login import login_required, current_user
 import logging
 main = Blueprint('main', __name__)

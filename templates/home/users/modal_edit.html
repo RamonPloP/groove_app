@@ -18,19 +18,14 @@
                     </div>
                     <div class="form-group">
                         <label for="username">Correo <code>*</code> </label>
-                        <input type="text" name="username" class="form-control" id="username" placeholder="Nombre de usuario"  value="{{ user.username }}" required>
+                        <input type="email" name="username" class="form-control" id="username" placeholder="Nombre de usuario"  value="{{ user.username }}" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"  {% if current_user.id == user.id %}hidden {% endif %}>
                         <label for="role">Rol <code>*</code> </label>
                         <select name="role" id="role" class="form-control" style="width: 100%;" aria-invalid="false" required>
                             <option selected="selected">Selecciona una opción</option>
                             <option {% if user.role == role.ADMIN %} selected="selected" {% endif %} value="0">Administrador</option>
-                            <option {% if user.role == role.RH %} selected="selected" {% endif %} value="1">RH</option>
-                            <option {% if user.role == role.SUPERVISOR %} selected="selected" {% endif %} value="3">SUPERVISOR</option>
-                            <option {% if user.role == role.RH_SUPERVISOR %} selected="selected" {% endif %} value="4">RH Y SUPERVISOR</option>
-                            <option {% if user.role == role.SUPER_ADMIN %} selected="selected" {% endif %} value="5">SUPER ADMINISTRADOR</option>
-                            <option {% if user.role == role.CARS_INVENTORY %} selected="selected" {% endif %} value="6">CONTROL DE VEHICULOS</option>
-                            <option {% if user.role == role.ADMIN_SUPERVISOR %} selected="selected" {% endif %} value="7">ADMIN DE SUPERVISOR</option>
+                            <option {% if user.role == role.USER %} selected="selected" {% endif %} value="1">Usuario</option>
                           </select>
                     </div>
                 </div>
@@ -42,14 +37,6 @@
                     <div class="form-group">
                         <label for="password2">Repetir contraseña</label>
                         <input type="password" name="password2" class="form-control" id="password2" placeholder="Contraseña">
-                    </div>
-                    <div class="form-group hidden-rh" hidden>
-                        <label for="role">Estados a los que pertenece <code>*</code> </label>
-                        <select name="multi_states[]" id="multi_states[]" class="form-control" multiple style="width: 100%;" aria-invalid="false" >
-                            {% for data in states %}
-                                <option {% if data.id in user_states %} selected="selected" {% endif %}  value="{{ data.id }}">{{ data.name }}</option>
-                            {% endfor %}
-                          </select>
                     </div>
                 </div>
             </div>

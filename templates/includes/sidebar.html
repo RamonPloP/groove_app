@@ -1,75 +1,66 @@
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="/" class="brand-link">
-      <img src="/static/assets/img/logo_s.png" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
-      <span class="brand-text font-weight-light">CPI</span>
-    </a>
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a href="/" class="brand-link">
+    <img src="/static/assets/img/logo_favicon.jpg" class="brand-image img-circle elevation-2" style="opacity: 1;">
+    <span class="brand-text font-weight-light"><strong>Lost In Groove</strong></span>
+  </a>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="/static/assets/img/policeman.png" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-            <a href="/logout" class="d-block">{{ current_user.name }} <br><small>(Cerrar sesion)</small></a>
-        </div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="/static/assets/img/user_image.jpg" class="img-circle" alt="User Image">
       </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Buscar en menu" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
+      <div class="info">
+        <a href="/logout" class="d-block">{{ current_user.name }} <br><small>(Cerrar sesión)</small></a>
       </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
-         {% if current_user.role == 0 or  current_user.role == 1 or  current_user.role == 4 or current_user.role == 5 %}
-            <li class="nav-item">
-            <a href="/dashboard" class="nav-link   ">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
-          </li>
-        {% endif %}
-          <li class="nav-item has-treeview {% if 'index' in segment %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if 'index' in segment %} active {% endif %}">
-              <i class="nav-icon fas fa-user"></i>
-              <p>
-                Empleados
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="/employees/addf" class="nav-link {% if 'index.html' in segment %} active {% endif %}">
-                  <i class="fa-solid fa-user-plus nav-icon"></i></i>
-                  <p>Agregar empleado</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/employees/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
-                  <i class="fas fa-list nav-icon"></i>
-                  <p>Listado de empleados</p>
-                </a>
-              </li>
-
-            </ul>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
-  </aside>
-  
+
+    <!-- SidebarSearch Form -->
+    <div class="form-inline">
+      <div class="input-group" data-widget="sidebar-search">
+        <input class="form-control form-control-sidebar" type="search" placeholder="Buscar en menú" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-sidebar">
+            <i class="fas fa-search fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+          <a href="/dashboard" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+        {% if current_user.role == 0 %}
+            <li class="nav-item has-treeview {% if 'index' in segment %} menu-open {% endif %}">
+              <a href="#" class="nav-link {% if 'index' in segment %} active {% endif %}">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                  Usuarios
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/users/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Lista de usuarios</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+      {% endif %}
+      </ul> <!-- Aquí cerramos correctamente el ul -->
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

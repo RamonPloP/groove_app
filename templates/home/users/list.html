@@ -26,6 +26,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    {% include 'home/modal_confirm.html' %}
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -160,7 +161,9 @@
                 }else{
                     btn = '<button type="button" class="btn btn-outline-danger" title="Cambiar a inactivo" onclick="changeInactive('+element.id +')">'+
                                 '<i class="fas fa-times"></i>'+
-                            '</button>';
+                            '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_user('+element.id +', this)">'+
+                            '<i class="fas fa-trash"></i>'+
+                        '</button>';
                 }
             }
 
@@ -177,7 +180,7 @@
                 'excel'
               ],
             language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
             },
             data: users,
             columns: [
@@ -298,6 +301,33 @@ function edit(e) {
             $(button).attr('disabled', false);
         });
      }
+
+    function delete_user(id) {
+        $('#confirmationModal').modal('show');
+        $('#confirmDeleteButton').off('click').on('click', function() {
+            axios({
+                    method: 'post',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    url: '/users/delete',
+                    data: {user_id:id}
+                }).then(function (response) {
+                    $('#confirmationModal').modal('hide');
+                    toastr.success(response.data, { timeOut: 9500 })
+                    get_users()
+                }).catch(function (error) {
+                    $('#confirmationModal').modal('hide');
+                    toastr.error(error.response.data)
+                    $("#create_button").prop("disabled", false)
+                    console.log(error.response)
+                }).finally(function () {
+                    $('#confirmationModal').modal('hide');
+                    $("form :input").prop("readonly", false)
+                    $('form select').css('pointer-events', 'all')
+            });
+        });
+    }
   </script>
 
 {% endblock javascripts %}

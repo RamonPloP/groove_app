@@ -10,6 +10,7 @@ from main import main as main_blueprint
 from models.template_filters import birth_date_years, status, vacations, seniority, _jinja2_strftime, vacation_status, month_to_text
 from routes.admin import admin as admin_blueprint
 from routes.users import users as users_blueprint
+from routes.classes import classes as classes_blueprint
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(classes_blueprint)
     app.register_blueprint(users_blueprint)
     app.jinja_env.filters['birth_date_years'] = birth_date_years
     app.jinja_env.filters['strftime'] = _jinja2_strftime

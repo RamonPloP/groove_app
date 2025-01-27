@@ -48,7 +48,7 @@ def users_crud():
 @login_required
 def users_list():
     users = Users.get_all()
-    users = [user.to_dict() for user in users]  # Usamos el método to_dict() aquí
+    users = [user.to_dict() for user in users]
     return jsonify(users)
 
 @users.route('/all')
@@ -89,3 +89,16 @@ def users_edit():
     user.role = role
     db.session.commit()
     return make_response('Usuario Actualizado con exito.', 201)
+
+@users.route('/delete', methods=['POST'])
+@login_required
+def user_delete():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    try:
+        user = Users.find_by_id(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return make_response('Borrado existoso.', 201)
+    except Exception as e:
+        return make_response(str(e), 400)

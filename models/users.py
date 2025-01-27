@@ -40,7 +40,7 @@ class Users(db.Model,UserMixin):
             'username': self.username,
             'role': self.role.name if self.role is not None else None,
             'status': self.status,
-            'created_at': self.created_at.isoformat() if self.created_at else None  # Convertir datetime a formato ISO
+            'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
     @classmethod

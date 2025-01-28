@@ -11,6 +11,8 @@ from models.template_filters import birth_date_years, status, vacations, seniori
 from routes.admin import admin as admin_blueprint
 from routes.users import users as users_blueprint
 from routes.classes import classes as classes_blueprint
+from routes.income_concepts import income_concepts as income_concepts_blueprint
+from routes.expense_concepts import expense_concepts as expense_concepts_blueprint
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -32,6 +34,8 @@ def create_app():
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(classes_blueprint)
+    app.register_blueprint(income_concepts_blueprint)
+    app.register_blueprint(expense_concepts_blueprint)
     app.register_blueprint(users_blueprint)
     app.jinja_env.filters['birth_date_years'] = birth_date_years
     app.jinja_env.filters['strftime'] = _jinja2_strftime

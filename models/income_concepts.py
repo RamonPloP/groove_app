@@ -14,3 +14,24 @@ class IncomeConcepts(db.Model):
                 # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
             setattr(self, prop, value)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+    @classmethod
+    def get_all(cls):
+        income_concepts = IncomeConcepts.query.order_by(IncomeConcepts.id.asc()).all()
+        return income_concepts
+
+    @classmethod
+    def find_by_id(cls, id):
+        income_concept = IncomeConcepts.query.filter_by(id=id).first()
+        return income_concept
+
+    @classmethod
+    def find_by_name(cls, name):
+        income_concept = IncomeConcepts.query.filter_by(name=name).first()
+        return income_concept

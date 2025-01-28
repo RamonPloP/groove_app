@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de bancos {% endblock %}
+{% block title %} Lista de tipos de pago {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -32,7 +32,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fas  fa-university nav-icon"></i> Clases</h1>
+            <h1><i class="fa-regular fa-credit-card nav-icon"></i> Tipos de pago</h1>
           </div>
             <div class="col-sm-6">
                 <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
@@ -50,7 +50,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de clases registradas en el sistema</h3>
+                <h3 class="card-title">Listado de tipos de pago en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -112,13 +112,13 @@
 
   <script>
      $(function() {
-      get_data('/classes/list?page=0')
+      get_data('/payment-types/list?page=0')
     });
      function show_info(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/' + id
+            url: '/payment-types/' + id
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -142,11 +142,11 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: '/classes/crud',
+                url: '/payment-types/crud',
                 data: new FormData(form)
             }).then(function (response) {
                 toastr.success(response.data, { timeOut: 9500 })
-                get_data('/classes/list?page=0')
+                get_data('/payment-types/list?page=0')
                 $('#data_modal').modal("hide")
             }).catch(function (error) {
                 toastr.error(error.response.data)
@@ -161,7 +161,7 @@
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/add'
+            url: '/payment-types/add'
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -183,17 +183,17 @@ function get_data(url) {
 /*Funtion to generate de datatable and fill whit de json data */
 
 function update_table(data) {
-    let classes = []
+    let payment_types = []
     $.each(data, function (i, element) {
-        let clase = []
-        clase.push(element.id)
-        clase.push(element.name)
-        clase.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
+        let payment_type = []
+        payment_type.push(element.id)
+        payment_type.push(element.name)
+        payment_type.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
-                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_class('+element.id +', this)">'+
+                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_payment_type('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
-        classes.push(clase)
+        payment_types.push(payment_type)
     })
     $('#datatable_list').DataTable().clear();
     $('#datatable_list').DataTable().destroy();
@@ -206,7 +206,7 @@ function update_table(data) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
         },
-        data: classes,
+        data: payment_types,
         columns: [
             {title: "ID"},
             {title: "NOMBRE"},
@@ -215,8 +215,8 @@ function update_table(data) {
     });
 }
 
-function delete_class(id) {
-    let classToDelete = id;
+function delete_payment_type(id) {
+    let payment_typeToDelete = id;
 
     $('#confirmationModal').modal('show');
 
@@ -226,11 +226,11 @@ function delete_class(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: '/classes/delete',
-            data: {class_id: classToDelete}
+            url: '/payment-types/delete',
+            data: {payment_type_id: payment_typeToDelete}
         }).then(function (response) {
             toastr.success(response.data, { timeOut: 9500 });
-            get_data('/classes/list?page=0');
+            get_data('/payment-types/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
             toastr.error(error.response.data);

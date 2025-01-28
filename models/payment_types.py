@@ -14,3 +14,24 @@ class PaymentTypes(db.Model):
                 # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
             setattr(self, prop, value)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+    @classmethod
+    def get_all(cls):
+        payment_types = PaymentTypes.query.order_by(PaymentTypes.id.asc()).all()
+        return payment_types
+
+    @classmethod
+    def find_by_id(cls, id):
+        payment_type = PaymentTypes.query.filter_by(id=id).first()
+        return payment_type
+
+    @classmethod
+    def find_by_name(cls, name):
+        payment_type = PaymentTypes.query.filter_by(name=name).first()
+        return payment_type

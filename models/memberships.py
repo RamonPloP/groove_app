@@ -15,3 +15,25 @@ class Memberships(db.Model):
                 # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
             setattr(self, prop, value)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'cost': self.cost
+        }
+
+    @classmethod
+    def get_all(cls):
+        memberships = Memberships.query.order_by(Memberships.id.asc()).all()
+        return memberships
+
+    @classmethod
+    def find_by_id(cls, id):
+        membership = Memberships.query.filter_by(id=id).first()
+        return membership
+
+    @classmethod
+    def find_by_name(cls, name):
+        membership = Memberships.query.filter_by(name=name).first()
+        return membership

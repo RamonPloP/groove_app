@@ -17,14 +17,18 @@ def addClass():
         try:
             clase = Classes(name=name)
         except ValidationError as err:
-            logger.error(f"Error al guadar banco: {err.messages} con los datos : {data}")
+            logger.error(f"Error al guadar: {err.messages} con los datos : {data}")
+            return make_response(f"Error al guadar: {err.messages} con los datos : {data}", 501)
         db.session.add(clase)
         db.session.commit()
-        return make_response('Banco Regitrado con exito.', 201)
+        return make_response('Clase registrada con exito.', 201)
     else:
         class_id = data.get('id')
-        bank = Classes.query.filter_by(id=class_id).first()
-        bank.name = name
+        clase = Classes.query.filter_by(name=name).first()
+        if clase:
+            return make_response('Ya hay una clase registrada con ese nombre.', 501)
+        clase = Classes.query.filter_by(id=class_id).first()
+        clase.name = name
         db.session.commit()
         return make_response('Clase actualizada con exito.', 201)
 

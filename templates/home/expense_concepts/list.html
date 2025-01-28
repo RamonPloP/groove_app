@@ -149,7 +149,7 @@
                 get_data('/expense-concepts/list?page=0')
                 $('#data_modal').modal("hide")
             }).catch(function (error) {
-                toastr.error(error)
+                toastr.error(error.response.data)
                 console.log(error)
             }).finally(function () {
 

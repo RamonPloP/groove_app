@@ -17,16 +17,20 @@ def addIncomeConcept():
         try:
             income_concept = IncomeConcepts(name=name)
         except ValidationError as err:
-            logger.error(f"Error al guadar banco: {err.messages} con los datos : {data}")
+            logger.error(f"Error al guadar: {err.messages} con los datos : {data}")
+            return make_response(f"Error al guadar: {err.messages} con los datos : {data}", 501)
         db.session.add(income_concept)
         db.session.commit()
         return make_response('Concepto Regitrado con exito.', 201)
     else:
         income_concept_id = data.get('id')
+        income_concept = IncomeConcepts.query.filter_by(name=name).first()
+        if income_concept:
+            return make_response('Ya hay un concepto registrado con ese nombre.', 501)
         income_concept = IncomeConcepts.query.filter_by(id=income_concept_id).first()
         income_concept.name = name
         db.session.commit()
-        return make_response('Clase actualizada con exito.', 201)
+        return make_response('Concepto actualizado con exito.', 201)
 
 def deleteIncomeConcept():
     data = request.get_json()

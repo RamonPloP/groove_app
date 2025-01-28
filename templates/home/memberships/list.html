@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de bancos {% endblock %}
+{% block title %} Lista de membresías{% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -32,7 +32,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fas  fa-university nav-icon"></i> Clases</h1>
+            <h1><i class="fa-solid fa-money-bill-transfer nav-icon"></i> Tipos de membresías</h1>
           </div>
             <div class="col-sm-6">
                 <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
@@ -50,7 +50,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de clases registradas en el sistema</h3>
+                <h3 class="card-title">Listado de membresías en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -59,6 +59,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Costo</th>
                     <th>Acciones</th>
                   </tr>
                   </thead>
@@ -67,6 +68,7 @@
                   <tfoot>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Costo</th>
                     <th>Acciones</th>
                   </tfoot>
                 </table>
@@ -108,17 +110,19 @@
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <!-- Toastr -->
   <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+    <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
   <!-- page script -->
 
   <script>
+
      $(function() {
-      get_data('/classes/list?page=0')
+      get_data('/memberships/list?page=0')
     });
      function show_info(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/' + id
+            url: '/memberships/' + id
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -133,6 +137,8 @@
     function register(e) {
         e.preventDefault()
         var form = $("#addForm")[0]
+        let data_form = new FormData(form)
+        data_form.set('cost',$('#cost').maskMoney('unmasked')[0])
         if (!form.checkValidity())
             form.reportValidity()
         else {
@@ -142,11 +148,11 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: '/classes/crud',
-                data: new FormData(form)
+                url: '/memberships/crud',
+                data: data_form
             }).then(function (response) {
                 toastr.success(response.data, { timeOut: 9500 })
-                get_data('/classes/list?page=0')
+                get_data('/memberships/list?page=0')
                 $('#data_modal').modal("hide")
             }).catch(function (error) {
                 toastr.error(error.response.data)
@@ -161,7 +167,7 @@
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/add'
+            url: '/memberships/add'
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -183,17 +189,18 @@ function get_data(url) {
 /*Funtion to generate de datatable and fill whit de json data */
 
 function update_table(data) {
-    let classes = []
+    let memberships = []
     $.each(data, function (i, element) {
-        let clase = []
-        clase.push(element.id)
-        clase.push(element.name)
-        clase.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
+        let membership = []
+        membership.push(element.id)
+        membership.push(element.name)
+        membership.push('$ '+element.cost)
+        membership.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
-                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_class('+element.id +', this)">'+
+                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_membership('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
-        classes.push(clase)
+        memberships.push(membership)
     })
     $('#datatable_list').DataTable().clear();
     $('#datatable_list').DataTable().destroy();
@@ -206,17 +213,18 @@ function update_table(data) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
         },
-        data: classes,
+        data: memberships,
         columns: [
             {title: "ID"},
             {title: "NOMBRE"},
+            {title: "COSTO"},
             {title: "ACCIONES"}
         ]
     });
 }
 
-function delete_class(id) {
-    let classToDelete = id;
+function delete_membership(id) {
+    let membershipToDelete = id;
 
     $('#confirmationModal').modal('show');
 
@@ -226,11 +234,11 @@ function delete_class(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: '/classes/delete',
-            data: {class_id: classToDelete}
+            url: '/memberships/delete',
+            data: {membership_id: membershipToDelete}
         }).then(function (response) {
             toastr.success(response.data, { timeOut: 9500 });
-            get_data('/classes/list?page=0');
+            get_data('/memberships/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
             toastr.error(error.response.data);

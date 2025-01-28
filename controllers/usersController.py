@@ -19,7 +19,7 @@ def addUser():
         # add the new user to the database
         db.session.add(new_user)
         db.session.commit()
-        return make_response('Usuario Regitrado con exito.', 201)
+        return make_response('Usuario registrado con exito.', 201)
     except Exception as e:
         return make_response("Error generando tu usuario, verifica la informacion", 400)
 
@@ -29,6 +29,9 @@ def editUsers():
     username = data.get('username')
     name = data.get('name')
     password = generate_password_hash(data.get('password'), method='sha256')
+    user = Users.query.filter_by(username=username).first()
+    if user:
+        return make_response('Ya hay un usuario registrado con ese correo.', 501)
     role_post = int(data.get('role'))
     role = Role(role_post)
     user = Users.query.filter_by(id=user_id).first()

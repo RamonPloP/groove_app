@@ -52,3 +52,21 @@ class Users(db.Model,UserMixin):
     def find_by_id(cls, bank_id):
         user = Users.query.filter_by(id=bank_id).first()
         return user
+
+    @classmethod
+    def changeactive(cls, id):
+        user = Users.find_by_id(id)
+        if user:
+            user.status = 1
+            db.session.commit()
+            return user.status
+        return None
+
+    @classmethod
+    def changeinactive(cls, id):
+        user = Users.find_by_id(id)
+        if user:
+            user.status = 0
+            db.session.commit()
+            return user.status
+        return None

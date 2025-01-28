@@ -17,16 +17,20 @@ def addExpenseConcept():
         try:
             expense_concept = ExpenseConcepts(name=name)
         except ValidationError as err:
-            logger.error(f"Error al guadar banco: {err.messages} con los datos : {data}")
+            logger.error(f"Error al guadar: {err.messages} con los datos : {data}")
+            return make_response(f"Error al guadar: {err.messages} con los datos : {data}", 501)
         db.session.add(expense_concept)
         db.session.commit()
         return make_response('Concepto Regitrado con exito.', 201)
     else:
         expense_concept_id = data.get('id')
+        expense_concept = ExpenseConcepts.query.filter_by(name=name).first()
+        if expense_concept:
+            return make_response('Ya hay un concepto registrado con ese nombre.', 501)
         expense_concept = ExpenseConcepts.query.filter_by(id=expense_concept_id).first()
         expense_concept.name = name
         db.session.commit()
-        return make_response('Clase actualizada con exito.', 201)
+        return make_response('Concepto actualizado con exito.', 201)
 
 def deleteExpenseConcept():
     data = request.get_json()

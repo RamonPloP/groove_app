@@ -25,7 +25,7 @@ def addMembership():
         return make_response('Membresía regitrada con exito.', 201)
     else:
         membership_id = data.get('id')
-        membership = Memberships.query.filter_by(name=name).first()
+        membership = Memberships.query.filter(Memberships.name == name, Memberships.id != int(data.get('id'))).first()
         if membership:
             return make_response('Ya hay una membresía registrada con ese nombre.', 501)
         membership = Memberships.query.filter_by(id=membership_id).first()

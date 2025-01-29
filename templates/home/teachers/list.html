@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de bancos {% endblock %}
+{% block title %} Lista de profesores{% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -19,7 +19,9 @@
   <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
-
+     <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -32,7 +34,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fa-solid fa-pen-ruler nav-icon"></i> Clases</h1>
+            <h1><i class="fa-solid fa-chalkboard-user nav-icon"></i> Profesores</h1>
           </div>
             <div class="col-sm-6">
                 <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
@@ -50,7 +52,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de clases registradas en el sistema</h3>
+                <h3 class="card-title">Listado de profesores en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -59,6 +61,9 @@
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Sueldo</th>
+                    <th>Clases</th>
                     <th>Acciones</th>
                   </tr>
                   </thead>
@@ -67,6 +72,9 @@
                   <tfoot>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Sueldo</th>
+                    <th>Clases</th>
                     <th>Acciones</th>
                   </tfoot>
                 </table>
@@ -108,17 +116,22 @@
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <!-- Toastr -->
   <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+    <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
+    <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
   <!-- page script -->
 
   <script>
+
      $(function() {
-      get_data('/classes/list?page=0')
+      get_data('/teachers/list?page=0')
     });
      function show_info(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/' + id
+            url: '/teachers/' + id
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -130,38 +143,70 @@
 
 
     }
+
     function register(e) {
-        e.preventDefault()
-        var form = $("#addForm")[0]
-        if (!form.checkValidity())
-            form.reportValidity()
-        else {
-            $("#create_button").prop("disabled", true)
+        e.preventDefault();
+
+        // Obtén el formulario
+        var form = $("#form")[0];
+
+        // Crear un nuevo FormData con los datos del formulario
+        let data_form = new FormData(form);
+
+        if(!data_form.get('id')){
+            data_form.set('payment', $('#payment').maskMoney('unmasked')[0]); // Obtiene el valor sin el signo $
+        }
+        // Obtén el valor de 'payment' y asegúrate de que lo manejas correctamente
+
+        // Obtén las clases seleccionadas
+        let selectedClasses = $('#classes').val(); // Esto retorna un array de los IDs de las clases seleccionadas
+        data_form.set('classes', JSON.stringify(selectedClasses)); // Añade la lista de clases al FormData como string
+
+        // Verifica si el formulario es válido
+        if (!form.checkValidity()) {
+            form.reportValidity(); // Si no es válido, muestra los mensajes de validación
+        } else {
+            // Deshabilita el botón para evitar múltiples envíos
+            $("#create_button").prop("disabled", true);
+
+            // Realiza la solicitud al backend
             axios({
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: '/classes/crud',
-                data: new FormData(form)
-            }).then(function (response) {
-                toastr.success(response.data, { timeOut: 9500 })
-                get_data('/classes/list?page=0')
-                $('#data_modal').modal("hide")
-            }).catch(function (error) {
-                toastr.error(error.response.data)
-                console.log(error)
-            }).finally(function () {
-
+                url: '/teachers/crud',
+                data: JSON.stringify({
+                    id: data_form.get('id'),
+                    name: data_form.get('name'),
+                    phone: data_form.get('phone'),
+                    payment: data_form.get('payment'),
+                    classes: JSON.parse(data_form.get('classes')) // Convierte el string de clases de vuelta a un array
+                })
+            })
+            .then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 }); // Muestra un mensaje de éxito
+                get_data('/teachers/list?page=0'); // Recarga los datos de la lista de profesores
+                $('#data_modal').modal("hide"); // Cierra el modal
+            })
+            .catch(function (error) {
+                toastr.error(error.response.data); // Muestra un mensaje de error
+                console.log(error);
+            })
+            .finally(function () {
+                // Reactiva el botón de creación
+                $("#create_button").prop("disabled", false);
             });
         }
     }
+
+
 
     function add_new(button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/classes/add'
+            url: '/teachers/add'
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -183,17 +228,24 @@ function get_data(url) {
 /*Funtion to generate de datatable and fill whit de json data */
 
 function update_table(data) {
-    let classes = []
+    let teachers = []
     $.each(data, function (i, element) {
-        let clase = []
-        clase.push(element.id)
-        clase.push(element.name)
-        clase.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
+        let teacher = []
+        teacher.push(element.id)
+        teacher.push(element.name)
+        teacher.push(element.phone)
+        teacher.push(element.payment)
+        let classes = ''
+        for(let i in element.classes){
+            classes += '<span class="badge badge-success">'+element.classes[i]+'</span> '
+        }
+        teacher.push(classes)
+        teacher.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
-                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_class('+element.id +', this)">'+
+                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_teacher('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
-        classes.push(clase)
+        teachers.push(teacher)
     })
     $('#datatable_list').DataTable().clear();
     $('#datatable_list').DataTable().destroy();
@@ -206,17 +258,20 @@ function update_table(data) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
         },
-        data: classes,
+        data: teachers,
         columns: [
             {title: "ID"},
             {title: "NOMBRE"},
+            {title: "TELÉFONO"},
+            {title: "SUELDO"},
+            {title: "CLASES"},
             {title: "ACCIONES"}
         ]
     });
 }
 
-function delete_class(id) {
-    let classToDelete = id;
+function delete_teacher(id) {
+    let teacherToDelete = id;
 
     $('#confirmationModal').modal('show');
 
@@ -226,11 +281,11 @@ function delete_class(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: '/classes/delete',
-            data: {class_id: classToDelete}
+            url: '/teachers/delete',
+            data: {teacher_id: teacherToDelete}
         }).then(function (response) {
             toastr.success(response.data, { timeOut: 9500 });
-            get_data('/classes/list?page=0');
+            get_data('/teachers/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
             toastr.error(error.response.data);

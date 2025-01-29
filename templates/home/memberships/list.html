@@ -138,7 +138,9 @@
         e.preventDefault()
         var form = $("#addForm")[0]
         let data_form = new FormData(form)
-        data_form.set('cost',$('#cost').maskMoney('unmasked')[0])
+        if(!data_form.get('id')){
+            data_form.set('cost',$('#cost').maskMoney('unmasked')[0])
+        }
         if (!form.checkValidity())
             form.reportValidity()
         else {

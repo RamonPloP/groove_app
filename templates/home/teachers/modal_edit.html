@@ -1,0 +1,103 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Editar Profesor {{teacher.name}}</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="form" method="post">
+        <div class="modal-body">
+            <div class="col-md-12">
+                <!-- Campo oculto para el ID del profesor -->
+                <div class="form-group">
+                    <input type="text" name="id" class="form-control" id="id" placeholder="ID del profesor" value="{{teacher.id}}" required hidden>
+                </div>
+
+                <!-- Nombre del profesor -->
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Nombre del profesor" value="{{teacher.name}}" required>
+                </div>
+
+                <!-- Teléfono del profesor -->
+                <div class="form-group">
+                    <label for="phone">Teléfono</label>
+                    <input type="tel" name="phone" class="form-control" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono del profesor" value="{{teacher.phone}}" required>
+
+                </div>
+
+                <!-- Sueldo por clase -->
+                <div class="form-group">
+                    <label for="payment">Sueldo por clase</label>
+                    <input type="number" min="0" name="payment" class="form-control" id="payment" placeholder="Sueldo por clase" value="{{teacher.payment}}" required>
+                </div>
+
+                <!-- Clases del profesor (select múltiple) -->
+                <div class="form-group">
+                    <label for="classes">Clases</label>
+                    <!-- Select múltiple con Select2 -->
+                    <select id="classes" name="classes" class="form-control" multiple="multiple" required>
+                        <!-- Las opciones de clases se cargarán con JavaScript -->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+        </div>
+    </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+
+<script>
+
+    $(document).ready(function() {
+    $.getJSON('/classes/list', function(data) {
+        let options = '';
+        data.forEach(function(clase) {
+            options += `<option value="${clase.id}">${clase.name}</option>`;
+        });
+        $('#classes').html(options); // Llenar el select con las opciones de clases
+
+        // Obtener los IDs de las clases del profesor (pasados desde el backend)
+        let selectedClasses = {{ teacher_classes|tojson }};  // Ahora es un array JSON
+
+        // Convertir selectedClasses (array de objetos) a un array de IDs
+        let selectedClassIds = selectedClasses.map(function(clase) {
+            return clase.id;  // Obtener solo el ID de cada clase
+        });
+
+        // Marcar las clases del profesor como seleccionadas
+        $('#classes').val(selectedClassIds).trigger('change'); // Establecer los IDs seleccionados en el select
+
+        $('#classes').select2();  // Activar select2 para la selección múltiple
+    });
+});
+
+</script>
+
+<style>
+    .select2-selection__choice {
+        background-color: #007bff !important;
+        color: white !important;
+        border-radius: 20px;
+        padding: 5px 10px;
+    }
+
+    .select2-selection__choice:hover {
+        background-color: #0056b3 !important;
+    }
+
+    .select2-results__option {
+        color: #333 !important;
+    }
+
+    .select2-results__option[aria-selected="true"] {
+        background-color: #007bff
+    }
+</style>

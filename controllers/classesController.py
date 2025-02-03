@@ -1,4 +1,5 @@
 from models.classes import Classes
+from models.teachers import Teachers, teachers_classes
 from flask import request, make_response
 from db import db
 from marshmallow import ValidationError
@@ -35,6 +36,18 @@ def addClass():
 def deleteClass():
     data = request.get_json()
     class_id = data.get('class_id')
+    teachers_with_class = (db.session.query(Teachers)
+                           .join(teachers_classes, teachers_classes.c.teacher_id == Teachers.id)
+                           .filter(teachers_classes.c.class_id == class_id)
+                           .all())
+
+    if teachers_with_class:
+        response = 'Aun hay maestros que imparten esta clase: '
+        for teacher in teachers_with_class:
+            response += teacher.name + ', '
+
+        response += ' desvincule esta clase de los profesores para poder eliminarla.'
+        return make_response(response,500)
     try:
         clase = Classes.find_by_id(class_id)
         db.session.delete(clase)

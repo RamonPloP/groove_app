@@ -1,7 +1,7 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h4 class="modal-title">Agregar Egreso</h4>
+      <h4 class="modal-title">Agregar Ingreso</h4>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -26,14 +26,13 @@
                             <option value="other">OTRO</option>
                         </select>
                 </div>
-                <div class="form-group" id="staff">
-                    <label for="name">Staff <code>*</code></label>
-                    <select name="staff" id="worker" class="form-control select2" style="width: 100%;" required>
+                <div class="form-group" id="members">
+                    <label for="name">Miembro <code>*</code></label>
+                    <select name="member" id="member" class="form-control select2" style="width: 100%;" required>
                         <option value="">Selecciona una opción</option>
-                            {% for teacher in teachers %}
-                                <option value ="{{ teacher.id }}" > {{ teacher.name }}  </option>
+                            {% for member in members %}
+                                <option value ="{{ member.id }}" > {{ member.name }}  </option>
                             {% endfor %}
-                            <option value="other" >OTRO</option>
                         </select>
                 </div>
                 <div class="form-group" id="description">
@@ -52,7 +51,7 @@
                         </select>
                 </div>
             </div>
-        <div class="col-md-12">
+        <div class="col-md-12" id="total_group">
             <div class="form-group">
                     <label for="name">Cantidad <code>*</code></label>
                     <input type="text" name="total" min="0" class="form-control" id="total" placeholder="Cantidad" required>
@@ -71,12 +70,11 @@
 <script>
 document.getElementById("description").hidden = true;
 document.getElementById("description").querySelector('input').disabled = true;
-document.getElementById("staff").hidden = true;
-document.getElementById("staff").querySelector('select').disabled = true;
+document.getElementById("members").hidden = true;
+document.getElementById("members").querySelector('select').disabled = true;
 
-$('#concept, #staff').on('change', () => {
-    // Verificar si 'concept' o 'staff' tienen el valor 'other'
-    if ($('#concept').val() == 'other' || $('#worker').val() == 'other') {
+$('#concept').on('change', () => {
+    if (['other', '9', '8'].includes($('#concept').val())){
         document.getElementById("description").hidden = false;
         document.getElementById("description").querySelector('input').disabled = false;  // Habilitar el input
     } else {
@@ -84,14 +82,22 @@ $('#concept, #staff').on('change', () => {
         document.getElementById("description").querySelector('input').disabled = true;  // Deshabilitar el input
     }
 
-    // Mostrar el campo de 'staff' solo si 'concept' tiene valor 7
-    if ($('#concept').val() == 7) {
-        document.getElementById("staff").hidden = false;
-        document.getElementById("staff").querySelector('select').disabled = false;  // Habilitar el select
+    if ($('#concept').val() == 4 || $('#concept').val() == 5) {
+        document.getElementById("members").hidden = false;
+        document.getElementById("members").querySelector('select').disabled = false;  // Habilitar el select
     } else {
-        document.getElementById("staff").hidden = true;
-        document.getElementById("staff").querySelector('select').disabled = true;  // Deshabilitar el select
+        document.getElementById("members").hidden = true;
+        document.getElementById("members").querySelector('select').disabled = true;  // Deshabilitar el select
     }
+
+    if ($('#concept').val() == 4 ){
+        document.getElementById("total_group").hidden = true;
+        document.getElementById("total").disabled = true;  // Deshabilitar el select
+    }else{
+        document.getElementById("total_group").hidden = false;
+        document.getElementById("total").disabled = false;
+    }
+
 });
 
 $('#total').maskMoney({prefix: '$'});

@@ -1,11 +1,13 @@
 from db import db
+from sqlalchemy import desc
 
 class Incomes(db.Model):
     __tablename__ = 'incomes'
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
-    income_concept_id = db.Column(db.Integer, db.ForeignKey('income_concepts.id'), nullable=False)
-    payment_type_id = db.Column(db.Integer, db.ForeignKey('payment_types.id'), nullable=False)
+    member = db.Column(db.String(50))
+    description = db.Column(db.String(50))
+    income_concept = db.Column(db.String(50), nullable=False)
+    payment_type = db.Column(db.String(50), nullable=False)
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
 
@@ -18,3 +20,29 @@ class Incomes(db.Model):
                 # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
             setattr(self, prop, value)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'member': self.member,
+            'description': self.description,
+            'income_concept': self.income_concept,
+            'payment_type': self.payment_type,
+            'date': self.date,
+            'amount': self.amount
+        }
+
+    @classmethod
+    def get_all(cls):
+        income_concepts = Incomes.query.order_by(desc(Incomes.date)).all()
+        return income_concepts
+
+    @classmethod
+    def find_by_id(cls, id):
+        income_concepts = Incomes.query.filter_by(id=id).first()
+        return income_concepts
+
+    @classmethod
+    def find_by_name(cls, name):
+        income_concepts = Incomes.query.filter_by(name=name).first()
+        return income_concepts

@@ -1,13 +1,15 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de conceptos de egresos {% endblock %}
+{% block title %} Lista de Ingresos {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-
+    <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -32,7 +34,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fa-solid fa-money-bill-transfer nav-icon"></i> Conceptos de Egresos</h1>
+            <h1><i class="fa-solid fa-sack-dollar"></i> Ingresos</h1>
           </div>
             <div class="col-sm-6">
                 <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
@@ -50,7 +52,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de conceptos de egresos en el sistema</h3>
+                <h3 class="card-title">Listado de ingresos en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -58,7 +60,12 @@
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Miembro</th>
+                    <th>Descripción</th>
+                    <th>Concepto</th>
+                    <th>Tipo de pago</th>
+                    <th>Cantidad</th>
                     <th>Acciones</th>
                   </tr>
                   </thead>
@@ -66,7 +73,12 @@
                   </tbody>
                   <tfoot>
                     <th>ID</th>
-                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Miembro</th>
+                    <th>Descripción</th>
+                    <th>Concepto</th>
+                    <th>Tipo de pago</th>
+                    <th>Cantidad</th>
                     <th>Acciones</th>
                   </tfoot>
                 </table>
@@ -105,20 +117,25 @@
   <script src="/static/assets/js/adminlte.min.js"></script>
   <!-- AdminLTE for demo purposes -->
   <script src="/static/assets/js/demo.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <!-- Toastr -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Toastr -->
   <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
   <!-- page script -->
+  <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
+
+    <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
 
   <script>
      $(function() {
-      get_data('/expense-concepts/list?page=0')
+      get_data('/incomes/list?page=0')
     });
      function show_info(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/expense-concepts/' + id
+            url: '/incomes/' + id
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -133,6 +150,11 @@
     function register(e) {
         e.preventDefault()
         var form = $("#addForm")[0]
+        let data_form = new FormData(form)
+
+        if(!data_form.get('id')){
+            data_form.set('total', $('#total').maskMoney('unmasked')[0]);
+        }
         if (!form.checkValidity())
             form.reportValidity()
         else {
@@ -142,11 +164,11 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: '/expense-concepts/crud',
-                data: new FormData(form)
+                url: '/incomes/crud',
+                data: data_form
             }).then(function (response) {
                 toastr.success(response.data, { timeOut: 9500 })
-                get_data('/expense-concepts/list?page=0')
+                get_data('/incomes/list?page=0')
                 $('#data_modal').modal("hide")
             }).catch(function (error) {
                 toastr.error(error.response.data)
@@ -161,7 +183,7 @@
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/expense-concepts/add'
+            url: '/incomes/add'
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -183,17 +205,21 @@ function get_data(url) {
 /*Funtion to generate de datatable and fill whit de json data */
 
 function update_table(data) {
-    let expense_concepts = []
+    let incomes = []
+    console.log(data)
     $.each(data, function (i, element) {
-        let expense_concept = []
-        expense_concept.push(element.id)
-        expense_concept.push(element.name)
-        expense_concept.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
-                            '<i class="fas fa-edit"></i>'+
-                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_expense_concept('+element.id +', this)">'+
+        let income = []
+        income.push(element.id)
+        income.push(element.date)
+        income.push(element.member || '-')
+        income.push(element.description || '-')
+        income.push(element.income_concept)
+        income.push(element.payment_type)
+        income.push('$ '+element.amount)
+        income.push('<button type="button" class="btn btn-outline-danger" onclick="delete_income('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
-        expense_concepts.push(expense_concept)
+        incomes.push(income)
     })
     $('#datatable_list').DataTable().clear();
     $('#datatable_list').DataTable().destroy();
@@ -206,17 +232,23 @@ function update_table(data) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
         },
-        data: expense_concepts,
+        data: incomes,
         columns: [
             {title: "ID"},
-            {title: "NOMBRE"},
+            {title: "FECHA"},
+            {title: "MIEMBRO"},
+            {title: "DESCRIPCIÓN"},
+            {title: "CONCEPTO"},
+            {title: "TIPO DE PAGO"},
+            {title: "CANTIDAD"},
             {title: "ACCIONES"}
-        ]
+        ],
+        "order": [[1, 'desc']]
     });
 }
 
-function delete_expense_concept(id) {
-    let expense_conceptToDelete = id;
+function delete_income(id) {
+    let incomeToDelete = id;
 
     $('#confirmationModal').modal('show');
 
@@ -226,11 +258,11 @@ function delete_expense_concept(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: '/expense-concepts/delete',
-            data: {expense_concept_id: expense_conceptToDelete}
+            url: '/incomes/delete',
+            data: {income_concept_id: incomeToDelete}
         }).then(function (response) {
             toastr.success(response.data, { timeOut: 9500 });
-            get_data('/expense-concepts/list?page=0');
+            get_data('/incomes/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
             toastr.error(error.response.data);

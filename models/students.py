@@ -1,5 +1,6 @@
-from sqlalchemy import ForeignKey, Enum
+from sqlalchemy import ForeignKey, Enum, desc
 from db import db
+
 from models.constants import SocialMediaType, DanceReasons, BloodType
 
 class Students(db.Model):
@@ -7,7 +8,7 @@ class Students(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
-    middle_name = db.Column(db.String(50))
+    second_last_name = db.Column(db.String(50))
     start_date = db.Column(db.Date)
     email = db.Column(db.String(150))
     membership_id = db.Column(db.Integer, db.ForeignKey('memberships.id'), nullable=False)
@@ -17,7 +18,7 @@ class Students(db.Model):
     address = db.Column(db.String(250))
     birth_date = db.Column(db.Date)
     birth_place = db.Column(db.String(100))
-    nacionality = db.Column(db.String(50))
+    nationality = db.Column(db.String(50))
     blood_type = db.Column(Enum(BloodType), nullable=False)
     phone = db.Column(db.String(20))
     dad_name = db.Column(db.String(50))
@@ -45,14 +46,56 @@ class Students(db.Model):
                 value = value[0]
             setattr(self, prop, value)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'last_name': self.last_name,
+            'second_last_name': self.second_last_name,
+            'start_date': self.start_date,
+            'email': self.email,
+            'membership_id': self.membership_id,
+            'membership': self.membership,
+            'how_find_us': self.how_find_us,
+            'how_find_us_text': self.how_find_us_text,
+            'dance_reason': self.dance_reason,
+            'dance_reason_text': self.dance_reason_text,
+            'regulation_pdf': self.regulation_pdf,
+            'address': self.address,
+            'birth_date': self.birth_date,
+            'birth_place': self.birth_place,
+            'nationality': self.nationality,
+            'blood_type': self.blood_type,
+            'blood_type_text': self.blood_type_text,
+            'phone': self.phone,
+            'dad_name': self.dad_name,
+            'dad_phone': self.dad_phone,
+            'mom_name': self.mom_name,
+            'mom_phone': self.mom_phone,
+            'emergency_contact_name': self.emergency_contact_name,
+            'emergency_contact_phone': self.emergency_contact_phone,
+            'has_chronic_disease': self.has_chronic_disease,
+            'chronic_disease': self.chronic_disease,
+            'has_allergies': self.has_allergies,
+            'allergies': self.allergies,
+            'has_restricted_activities': self.has_restricted_activities,
+            'restricted_activities': self.restricted_activities,
+            'has_mental_conditions': self.has_mental_conditions,
+            'mental_conditions': self.mental_conditions,
+
+        }
+
     @classmethod
     def get_all(cls):
-        students = Students.query.order_by(
-            Students.id.asc())
-        students.all()
+        students = Students.query.all()
         return students
 
     @classmethod
-    def find_by_id(cls, student_id):
-        student = Students.query.filter_by(id=student_id).first()
+    def find_by_id(cls, id):
+        student = Students.query.filter_by(id=id).first()
+        return student
+
+    @classmethod
+    def find_by_name(cls, name):
+        student = Students.query.filter_by(name=name).first()
         return student

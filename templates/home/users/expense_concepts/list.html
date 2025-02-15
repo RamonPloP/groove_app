@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de profesores{% endblock %}
+{% block title %} Lista de conceptos de egresos {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -19,9 +19,7 @@
   <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
   <!-- Toastr -->
   <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
-     <!-- Select2 -->
-  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
-  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
 {% endblock stylesheets %}
 
 {% block content %}
@@ -34,7 +32,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fa-solid fa-chalkboard-user nav-icon"></i> Profesores</h1>
+            <h1><i class="fa-solid fa-money-bill-transfer nav-icon"></i> Conceptos de Egresos</h1>
           </div>
             <div class="col-sm-6">
                 <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
@@ -52,7 +50,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de profesores en el sistema</h3>
+                <h3 class="card-title">Listado de conceptos de egresos en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -61,9 +59,6 @@
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Sueldo</th>
-                    <th>Clases</th>
                     <th>Acciones</th>
                   </tr>
                   </thead>
@@ -72,9 +67,6 @@
                   <tfoot>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Sueldo</th>
-                    <th>Clases</th>
                     <th>Acciones</th>
                   </tfoot>
                 </table>
@@ -116,22 +108,17 @@
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <!-- Toastr -->
   <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
-    <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
-    <!-- Select2 -->
-  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
-  <script src="/static/assets/plugins/curp/curp.js"></script>
   <!-- page script -->
 
   <script>
-
      $(function() {
-      get_data('/teachers/list?page=0')
+      get_data('/expense-concepts/list?page=0')
     });
      function show_info(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/teachers/' + id
+            url: '/expense-concepts/' + id
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -143,61 +130,38 @@
 
 
     }
-
     function register(e) {
-        e.preventDefault();
-        var form = $("#form")[0];
-
-        let data_form = new FormData(form);
-
-        if(!data_form.get('id')){
-            data_form.set('payment', $('#payment').maskMoney('unmasked')[0]);
-        }
-
-        let selectedClasses = $('#classes').val();
-        data_form.set('classes', JSON.stringify(selectedClasses));
-
-        if (!form.checkValidity()) {
-            form.reportValidity();
-        } else {
-            $("#create_button").prop("disabled", true);
-
+        e.preventDefault()
+        var form = $("#addForm")[0]
+        if (!form.checkValidity())
+            form.reportValidity()
+        else {
+            $("#create_button").prop("disabled", true)
             axios({
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: '/teachers/crud',
-                data: JSON.stringify({
-                    id: data_form.get('id'),
-                    name: data_form.get('name'),
-                    phone: data_form.get('phone'),
-                    payment: data_form.get('payment'),
-                    classes: JSON.parse(data_form.get('classes'))
-                })
-            })
-            .then(function (response) {
-                toastr.success(response.data, { timeOut: 9500 });
-                get_data('/teachers/list?page=0');
-                $('#data_modal').modal("hide");
-            })
-            .catch(function (error) {
-                toastr.error(error.response.data);
-                console.log(error);
-            })
-            .finally(function () {
-                $("#create_button").prop("disabled", false);
+                url: '/expense-concepts/crud',
+                data: new FormData(form)
+            }).then(function (response) {
+                toastr.success(response.data, { timeOut: 9500 })
+                get_data('/expense-concepts/list?page=0')
+                $('#data_modal').modal("hide")
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+                console.log(error)
+            }).finally(function () {
+
             });
         }
     }
-
-
 
     function add_new(button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
-            url: '/teachers/add'
+            url: '/expense-concepts/add'
         }).then(function (response) {
             $('#data_modal').html(response.data)
             $('#data_modal').modal("show")
@@ -219,24 +183,17 @@ function get_data(url) {
 /*Funtion to generate de datatable and fill whit de json data */
 
 function update_table(data) {
-    let teachers = []
+    let expense_concepts = []
     $.each(data, function (i, element) {
-        let teacher = []
-        teacher.push(element.id)
-        teacher.push(element.name)
-        teacher.push(element.phone)
-        teacher.push(element.payment)
-        let classes = ''
-        for(let i in element.classes){
-            classes += '<span class="badge badge-success">'+element.classes[i]+'</span> '
-        }
-        teacher.push(classes)
-        teacher.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
+        let expense_concept = []
+        expense_concept.push(element.id)
+        expense_concept.push(element.name)
+        expense_concept.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
-                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_teacher('+element.id +', this)">'+
+                        '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_expense_concept('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
-        teachers.push(teacher)
+        expense_concepts.push(expense_concept)
     })
     $('#datatable_list').DataTable().clear();
     $('#datatable_list').DataTable().destroy();
@@ -249,20 +206,17 @@ function update_table(data) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
         },
-        data: teachers,
+        data: expense_concepts,
         columns: [
             {title: "ID"},
             {title: "NOMBRE"},
-            {title: "TELÉFONO"},
-            {title: "SUELDO"},
-            {title: "CLASES"},
             {title: "ACCIONES"}
         ]
     });
 }
 
-function delete_teacher(id) {
-    let teacherToDelete = id;
+function delete_expense_concept(id) {
+    let expense_conceptToDelete = id;
 
     $('#confirmationModal').modal('show');
 
@@ -272,11 +226,11 @@ function delete_teacher(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            url: '/teachers/delete',
-            data: {teacher_id: teacherToDelete}
+            url: '/expense-concepts/delete',
+            data: {expense_concept_id: expense_conceptToDelete}
         }).then(function (response) {
             toastr.success(response.data, { timeOut: 9500 });
-            get_data('/teachers/list?page=0');
+            get_data('/expense-concepts/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
             toastr.error(error.response.data);

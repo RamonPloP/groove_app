@@ -1,0 +1,105 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar Egreso</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="name">Fecha</label>
+                    <input type="date" name="date" class="form-control" id="date" placeholder=""  required>
+                </div>
+            </div>
+            <div class="col-md-12">
+
+                <div class="form-group">
+                    <label for="concept">Concepto</label>
+                        <select name="concept" id="concept" class="form-control select2" style="width: 100%;" required>
+                            <option value="">Selecciona una opción</option>
+                                {% for concept in concepts %}
+                                    <option value ="{{ concept.id }}" > {{ concept.name }}  </option>
+                                {% endfor %}
+                            <option value="other">OTRO</option>
+                        </select>
+                </div>
+                <div class="form-group" id="staff">
+                    <label for="name">Staff</label>
+                    <select name="staff" id="worker" class="form-control select2" style="width: 100%;" required>
+                        <option value="">Selecciona una opción</option>
+                            {% for teacher in teachers %}
+                                <option value ="{{ teacher.id }}" > {{ teacher.name }}  </option>
+                            {% endfor %}
+                            <option value="other" >OTRO</option>
+                        </select>
+                </div>
+                <div class="form-group" id="description">
+                    <label for="name">Descripción</label>
+                    <input type="text" name="desc" class="form-control" id="desc" placeholder="Descripción" required>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="payment">Tipo de pago</label>
+                        <select name="payment" id="payment" class="form-control select2" style="width: 100%;" required>
+                            <option value="">Selecciona una opción</option>
+                                {% for data in payment_types %}
+                                    <option value ="{{ data.id }}" > {{ data.name }}  </option>
+                                {% endfor %}
+                        </select>
+                </div>
+            </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                    <label for="name">Cantidad</label>
+                    <input type="text" name="total" min="0" class="form-control" id="total" placeholder="Cantidad" required>
+                </div>
+        </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+document.getElementById("description").hidden = true;
+document.getElementById("description").querySelector('input').disabled = true;
+document.getElementById("staff").hidden = true;
+document.getElementById("staff").querySelector('select').disabled = true;
+
+$('#concept, #staff').on('change', () => {
+    // Verificar si 'concept' o 'staff' tienen el valor 'other'
+    if ($('#concept').val() == 'other' || $('#worker').val() == 'other') {
+        document.getElementById("description").hidden = false;
+        document.getElementById("description").querySelector('input').disabled = false;  // Habilitar el input
+    } else {
+        document.getElementById("description").hidden = true;
+        document.getElementById("description").querySelector('input').disabled = true;  // Deshabilitar el input
+    }
+
+    // Mostrar el campo de 'staff' solo si 'concept' tiene valor 7
+    if ($('#concept').val() == 7) {
+        document.getElementById("staff").hidden = false;
+        document.getElementById("staff").querySelector('select').disabled = false;  // Habilitar el select
+    } else {
+        document.getElementById("staff").hidden = true;
+        document.getElementById("staff").querySelector('select').disabled = true;  // Deshabilitar el select
+    }
+});
+
+$('#total').maskMoney({prefix: '$'});
+
+$('.select2').select2({
+    placeholder: 'Selecciona una opción',
+    allowClear: true,
+});
+
+
+</script>

@@ -1,0 +1,37 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar reglamento firmado
+          </h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" name="item_id" class="form-control" id="item_id" value="{{ student.id }}" hidden required>
+                     <div class="form-group">
+                        <label for="file">Agregar documento a item</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" name="pdf" id="pdf" required>
+                          <label class="custom-file-label" for="customFile">Elegir archivo</label>
+                        </div>
+                     </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            {% if student.regulation_pdf %}
+                <a type="button" target="_blank" href='{{ student.regulation_pdf }}' class="btn btn-sm btn-outline-success" title="Ultimo documento">Descargar ultimo PDF</a>
+            {% endif %}
+           <button type="submit" class="btn btn-primary" onclick="register_pdf(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

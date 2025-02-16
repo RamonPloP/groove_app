@@ -1,0 +1,258 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Control de vencimientos {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+    <!-- Select2 -->
+  <link rel="stylesheet" href="/static/assets/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+    {% include 'home/modal_confirm.html' %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fa-regular fa-clock nav-icon"></i> Control de vencimientos</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="col">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Control de vencimientos</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                  <div class="row d-flex">
+                    <div class="col-md-4">
+                      <table id="table_expired" class="table table-bordered table-striped table-danger">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Fecha de expiración</th>
+                            <th>Monto</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                          <th>Nombre</th>
+                          <th>Fecha de expiración</th>
+                          <th>Monto</th>
+                        </tfoot>
+                      </table>
+                    </div>
+
+                    <div class="col-md-4">
+                      <table id="table_expire_today" class="table table-bordered table-striped table-warning">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Fecha de expiración</th>
+                            <th>Monto</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                          <th>Nombre</th>
+                          <th>Fecha de expiración</th>
+                          <th>Monto</th>
+                        </tfoot>
+                      </table>
+                    </div>
+
+                    <div class="col-md-4">
+                      <table id="table_expire_future" class="table table-bordered table-striped table-success">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Fecha de expiración</th>
+                            <th>Monto</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                          <th>Nombre</th>
+                          <th>Fecha de expiración</th>
+                          <th>Monto</th>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <!-- Modal -->
+        <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="data_modal"
+             aria-hidden="true">
+        </div>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+  <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+     <!-- Select2 -->
+  <script src="/static/assets/plugins/select2/js/select2.full.min.js"></script>
+  <script src="/static/assets/plugins/curp/curp.js"></script>
+  <!-- page script -->
+  <script>
+    $(function () {
+       get_members()
+    });
+
+    function get_members() {
+        $.getJSON('/expirations/list/expired', function (data) {
+                update_expired_table(data)
+            }
+        );
+        $.getJSON('/expirations/list/expire_today', function (data) {
+                update_expire_today_table(data)
+            }
+        );
+        $.getJSON('/expirations/list/expire_future', function (data) {
+                update_expire_future_table(data)
+            }
+        );
+    }
+
+    function update_expired_table(data) {
+        let expirations = []
+        $.each(data, function (i, element) {
+            let expire = []
+            expire.push(element.name)
+            expire.push(element.expire_date)
+            expire.push('$ '+element.amount)
+
+            expirations.push(expire)
+        })
+        $('#table_expired').DataTable().clear();
+        $('#table_expired').DataTable().destroy();
+        $('#table_expired').DataTable({
+            dom: 'lBfrtip',
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+            },
+            data: expirations,
+            responsive: true,
+            columns: [
+                {title: "NOMBRE"},
+                {title: "FECHA DE EXPIRACIÓN"},
+                {title: "MONTO"},
+            ]
+
+        });
+    }
+
+    function update_expire_today_table(data) {
+        let expirations = []
+        $.each(data, function (i, element) {
+            let expire = []
+            expire.push(element.name)
+            expire.push(element.expire_date)
+            expire.push('$ '+element.amount)
+
+            expirations.push(expire)
+        })
+        $('#table_expire_today').DataTable().clear();
+        $('#table_expire_today').DataTable().destroy();
+        $('#table_expire_today').DataTable({
+            dom: 'lBfrtip',
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+            },
+            data: expirations,
+            responsive: true,
+            columns: [
+                {title: "NOMBRE"},
+                {title: "FECHA DE EXPIRACIÓN"},
+                {title: "MONTO"},
+            ]
+
+        });
+    }
+
+    function update_expire_future_table(data) {
+        let expirations = []
+        $.each(data, function (i, element) {
+            let expire = []
+            expire.push(element.name)
+            expire.push(element.expire_date)
+            expire.push('$ '+element.amount)
+
+            expirations.push(expire)
+        })
+        $('#table_expire_future').DataTable().clear();
+        $('#table_expire_future').DataTable().destroy();
+        $('#table_expire_future').DataTable({
+            dom: 'lBfrtip',
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+            },
+            data: expirations,
+            responsive: true,
+            columns: [
+                {title: "NOMBRE"},
+                {title: "FECHA DE EXPIRACIÓN"},
+                {title: "MONTO"},
+            ]
+
+        });
+    }
+
+  </script>
+
+{% endblock javascripts %}

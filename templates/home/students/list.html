@@ -68,6 +68,7 @@
                     <th>Membresía</th>
                     <th>Cómo nos conoció</th>
                     <th>Razón para bailar</th>
+                    <th>Fecha de vencimiento</th>
                     <th>Dirección</th>
                     <th>Fecha de Nacimiento</th>
                     <th>Lugar de Nacimiento</th>
@@ -102,6 +103,7 @@
                     <th>Email</th>
                     <th>Membresía</th>
                     <th>Cómo nos conoció</th>
+                    <th>Fecha de vencimiento</th>
                     <th>Razón para bailar</th>
                     <th>Dirección</th>
                     <th>Fecha de Nacimiento</th>
@@ -258,6 +260,7 @@ function update_table(data) {
         item.push(element.email || '-')
         item.push(element.membership)
         item.push(element.how_find_us_text)
+        item.push(element.expire_date)
         item.push(element.dance_reason_text || '-')
         item.push(element.address || '-')
         item.push(element.birth_date || '-')
@@ -311,6 +314,7 @@ function update_table(data) {
             {title: "EMAIL"},
             {title: "MEMBRESÍA"},
             {title: "CÓMO NOS CONOCIÓ"},
+            {title: "FECHA DE VENCIMIENTO"},
             {title: "RAZÓN PARA BAILAR"},
             {title: "DIRECCIÓN"},
             {title: "FECHA DE NACIMIENTO"},

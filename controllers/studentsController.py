@@ -2,6 +2,8 @@ from models.students import Students
 from models.constants import SocialMediaType, DanceReasons, BloodType
 from flask import request, make_response
 from db import db
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import os
 import logging
 
@@ -31,7 +33,11 @@ def addEditStudent():
         student.name = data.get('name')
         student.last_name = data.get('last_name')
         student.second_last_name = data.get('second_last_name')
-        student.start_date = data.get('start_date')
+
+        start_date_str = data.get('start_date')
+        student.start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+        student.expire_date = student.start_date + relativedelta(months=1)
+
         student.email = data.get('email')
         student.membership_id = data.get('membership_id')
 

@@ -76,7 +76,7 @@ document.getElementById("staff").querySelector('select').disabled = true;
 
 $('#concept, #staff').on('change', () => {
     // Verificar si 'concept' o 'staff' tienen el valor 'other'
-    if ($('#concept').val() == 'other' || $('#worker').val() == 'other') {
+    if ($('#concept').val() == 'other' || $('#concept').val() == 8 || $('#concept').val() == 15 || $('#concept').val() == 9 ||$('#worker').val() == 'other') {
         document.getElementById("description").hidden = false;
         document.getElementById("description").querySelector('input').disabled = false;  // Habilitar el input
     } else {

@@ -61,9 +61,9 @@
                   <tr>
                     <th>ID</th>
                     <th>Fecha</th>
-                    <th>Miembro</th>
-                    <th>Descripción</th>
                     <th>Concepto</th>
+                    <th>Descripción</th>
+                    <th>Miembro</th>
                     <th>Tipo de pago</th>
                     <th>Cantidad</th>
                     <th>Acciones</th>
@@ -74,9 +74,9 @@
                   <tfoot>
                     <th>ID</th>
                     <th>Fecha</th>
-                    <th>Miembro</th>
-                    <th>Descripción</th>
                     <th>Concepto</th>
+                    <th>Descripción</th>
+                    <th>Miembro</th>
                     <th>Tipo de pago</th>
                     <th>Cantidad</th>
                     <th>Acciones</th>
@@ -211,9 +211,9 @@ function update_table(data) {
         let income = []
         income.push(element.id)
         income.push(element.date)
-        income.push(element.member || '-')
-        income.push(element.description || '-')
         income.push(element.income_concept)
+        income.push(element.description || '-')
+        income.push(element.member || '-')
         income.push(element.payment_type)
         income.push('$ '+element.amount)
         income.push('<button type="button" class="btn btn-outline-danger" onclick="delete_income('+element.id +', this)">'+
@@ -236,9 +236,9 @@ function update_table(data) {
         columns: [
             {title: "ID"},
             {title: "FECHA"},
-            {title: "MIEMBRO"},
-            {title: "DESCRIPCIÓN"},
             {title: "CONCEPTO"},
+            {title: "DESCRIPCIÓN"},
+            {title: "MIEMBRO"},
             {title: "TIPO DE PAGO"},
             {title: "CANTIDAD"},
             {title: "ACCIONES"}

@@ -4,6 +4,9 @@ from models.utils import is_admin
 from models.users import Users
 from models.constants import Role
 from controllers.usersController import addUser, editUsers, deleteUser
+import logging
+
+logger = logging.getLogger(__name__)
 users = Blueprint('users', __name__, url_prefix='/users')
 
 @users.route('/changeactive/<id>', methods=['post'])

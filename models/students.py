@@ -1,4 +1,5 @@
 from sqlalchemy import ForeignKey, Enum, desc
+from datetime import datetime
 from db import db
 
 from models.constants import SocialMediaType, DanceReasons, BloodType
@@ -10,8 +11,10 @@ class Students(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     second_last_name = db.Column(db.String(50))
     start_date = db.Column(db.Date)
+    expire_date = db.Column(db.Date)
     email = db.Column(db.String(150))
     membership_id = db.Column(db.Integer, db.ForeignKey('memberships.id'), nullable=False)
+    is_up_to_date = db.Column(db.Boolean, default=False, nullable=False)
     how_find_us = db.Column(Enum(SocialMediaType), nullable=False)
     dance_reason = db.Column(Enum(DanceReasons))
     regulation_pdf = db.Column(db.String(100))
@@ -53,6 +56,7 @@ class Students(db.Model):
             'last_name': self.last_name,
             'second_last_name': self.second_last_name,
             'start_date': self.start_date,
+            'expire_date': self.expire_date,
             'email': self.email,
             'membership_id': self.membership_id,
             'membership': self.membership,
@@ -83,6 +87,15 @@ class Students(db.Model):
             'has_mental_conditions': self.has_mental_conditions,
             'mental_conditions': self.mental_conditions,
 
+        }
+
+    def to_dict_expired_control(self):
+        return {
+            'id': self.id,
+            'expire_date': self.expire_date.strftime('%d/%m/%Y'),
+            'name': self.name,
+            'membership_id': self.membership_id,
+            'amount': self.amount
         }
 
     @classmethod

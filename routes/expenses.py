@@ -38,8 +38,7 @@ def expense_concept_delete():
 @is_admin
 @login_required
 def expenses_list_view():
-    expenses = Expenses.get_all()
-    return render_template('home/expenses/list.html', expenses=expenses)
+    return render_template('home/expenses/list.html')
 
 @expenses.route('/list')
 @is_admin

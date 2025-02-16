@@ -47,6 +47,7 @@ def students_list():
     students = Students.get_all()
     for student in students:
         student.start_date = student.start_date.strftime('%Y/%m/%d')
+        student.expire_date = student.expire_date.strftime('%Y/%m/%d')
         student.birth_date = student.birth_date.strftime('%Y/%m/%d')
         student.membership = Memberships.find_by_id(student.membership_id).name
         student.how_find_us_text = SocialMediaType(int(student.how_find_us)).name

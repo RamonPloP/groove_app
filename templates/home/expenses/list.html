@@ -251,7 +251,7 @@ function delete_expense(id) {
 
     $('#confirmationModal').modal('show');
 
-    $('#confirmDeleteButton').off('click').on('click', function() {
+    $('#confirmDeleteButton').off('click').on('click', function () {
         axios({
             method: 'post',
             headers: {
@@ -260,7 +260,7 @@ function delete_expense(id) {
             url: '/expenses/delete',
             data: {expense_concept_id: expenseToDelete}
         }).then(function (response) {
-            toastr.success(response.data, { timeOut: 9500 });
+            toastr.success(response.data, {timeOut: 9500});
             get_data('/expenses/list?page=0');
             $('#confirmationModal').modal('hide'); // Cierra el modal
         }).catch(function (error) {
@@ -269,7 +269,6 @@ function delete_expense(id) {
         });
     });
 }
-
 
 
   </script>

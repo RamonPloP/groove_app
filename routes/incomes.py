@@ -56,5 +56,5 @@ def classes_list():
 def incomes_add():
     concepts = db.session.query(IncomeConcepts).all()
     payment_types = db.session.query(PaymentTypes).all()
-    members = db.session.query(Students).all()
+    members = db.session.query(Students).filter(Students.is_up_to_date == 0).all()
     return render_template('home/incomes/modal_add.html', concepts=concepts, payment_types=payment_types, members=members)

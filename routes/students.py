@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template
 from flask_login import login_required
 from models.constants import SocialMediaType, BloodType, DanceReasons
 from models.memberships import Memberships

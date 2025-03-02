@@ -18,7 +18,7 @@ expirations_control = Blueprint('expirations', __name__, url_prefix='/expiration
 @is_admin
 def expirations_index():
     today = datetime.now(timezone('America/Chihuahua'))
-    today = datetime.strftime(today, '%d/%m-%Y')
+    today = datetime.strftime(today, '%d/%m/%Y')
     return render_template('home/expirations_control/list.html', today=today)
 
 @expirations_control.route('/list/<type>')
@@ -28,21 +28,21 @@ def get_expirations(type):
     today = datetime.now(timezone('America/Chihuahua')).date()
 
     if type == 'expired':
-        expired = db.session.query(Students).filter(func.date(Students.start_date) < today).all()
+        expired = db.session.query(Students).filter(func.date(Students.expire_date) < today, Students.is_up_to_date == False).all()
         for expire in expired:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expired = [expire.to_dict_expired_control() for expire in expired]
         return expired
 
     elif type == 'expire_today':
-        expire_today = db.session.query(Students).filter(func.date(Students.start_date) == today).all()
+        expire_today = db.session.query(Students).filter(func.date(Students.expire_date) == today, Students.is_up_to_date == False).all()
         for expire in expire_today:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expire_today = [expire.to_dict_expired_control() for expire in expire_today]
         return expire_today
 
     elif type == 'expire_future':
-        expire_future = db.session.query(Students).filter(func.date(Students.start_date) > today).all()
+        expire_future = db.session.query(Students).filter(func.date(Students.expire_date) > today).all()
         for expire in expire_future:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expire_future = [expire_future.to_dict_expired_control() for expire_future in expire_future]

@@ -39,25 +39,12 @@
             <p>Dashboard</p>
           </a>
         </li>
-        {% if current_user.role == 0 %}
-            <li class="nav-item has-treeview {% if 'index' in segment %} menu-open {% endif %}">
-              <a href="#" class="nav-link {% if 'index' in segment %} active {% endif %}">
-                <i class="nav-icon fas fa-user"></i>
-                <p>
-                  Usuarios
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="/users/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Lista de usuarios</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-      {% endif %}
+        <li class="nav-item">
+          <a href="/users/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
+            <i class="fa-solid fa-user nav-icon"></i>
+            <p>Lista de usuarios</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="/students/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
             <i class="fa-solid fa-people-robbery nav-icon"></i>
@@ -82,6 +69,12 @@
         <p>Control de vencimientos</p>
       </a>
     </li>
+      <li class="nav-item">
+          <a href="/leads/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
+            <i class="fa-solid fa-users nav-icon"></i>
+            <p>Leads</p>
+          </a>
+        </li>
       <li class="nav-header">Configuraciones</li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">

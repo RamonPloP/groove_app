@@ -1,0 +1,71 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar Lead</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">Nombre <code>*</code></label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="assist_date">Fecha de agenda <code>*</code></label>
+              <input type="date" name="start_date" class="form-control" id="assist_date" required>
+            </div>
+            <div class="form-group">
+              <label for="class_id">Clase muestra <code>*</code></label>
+                <select name="class_id" id="class_id" class="form-control select2" required>
+                    <option value="">Selecciona una opción</option>
+                    {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="address">Edad <code>*</code></label>
+              <input type="number" name="age" class="form-control" id="age" placeholder="Edad" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Teléfono <code>*</code></label>
+              <input type="tel" name="phone" class="form-control" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono (123-456-7890)" required>
+            </div>
+            <div class="form-group">
+              <label for="how_find_us">¿Cómo nos encontró? <code>*</code></label>
+              <select name="how_find_us" id="how_find_us" class="form-control select2" required>
+                <option value="">Selecciona una opción</option>
+                <option value="0">Facebook</option>
+                <option value="2">Instagram</option>
+                <option value="1">WhatsApp</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- /.modal-dialog -->
+
+<script>
+
+    $('.select2').select2({
+        placeholder: 'Selecciona una opción',
+        allowClear: true,
+    });
+</script>

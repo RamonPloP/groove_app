@@ -7,6 +7,8 @@ from flask import request, make_response
 from models.memberships import Memberships
 from db import db
 from marshmallow import ValidationError
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -23,6 +25,16 @@ def addEditIncome():
 
     member = int(data.get('member')) if data.get('member') else None
     if concept_id in [4, 5]:
+        member = Students.find_by_id(int(data.get('member')))
+        member.is_up_to_date = True
+        member.expire_date = member.expire_date + relativedelta(months=1)
+        try:
+            db.session.add(member)
+            db.session.commit()
+        except ValidationError as err:
+            logger.error(f"Error al guardar: {err.messages} con los datos : {data}")
+            return make_response(f"Error al guardar: {err.messages} con los datos : {data}", 501)
+
         member = Students.find_by_id(int(data.get('member'))).name
 
     description = data.get('desc') if concept_id in [8, 9] or concept_id == "Otro" else None

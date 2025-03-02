@@ -47,63 +47,72 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Control de vencimientos</h3>
+                <h3 class="card-title"><strong>Fecha de hoy: {{ today }}</strong></h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                   <div class="row d-flex">
                     <div class="col-md-4">
-                      <table id="table_expired" class="table table-bordered table-striped table-danger">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Fecha de expiración</th>
-                            <th>Monto</th>
-                          </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                          <th>Nombre</th>
-                          <th>Fecha de expiración</th>
-                          <th>Monto</th>
-                        </tfoot>
-                      </table>
+                        <h4 class="text-center">Vencidos</h4>
+                        <div class="table-responsive">
+                              <table id="table_expired" class="table table-bordered table-striped table-danger">
+                                <thead>
+                                  <tr>
+                                    <th>Nombre</th>
+                                    <th>Fecha de expiración</th>
+                                    <th>Monto</th>
+                                  </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                  <th>Nombre</th>
+                                  <th>Fecha de expiración</th>
+                                  <th>Monto</th>
+                                </tfoot>
+                              </table>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
-                      <table id="table_expire_today" class="table table-bordered table-striped table-warning">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Fecha de expiración</th>
-                            <th>Monto</th>
-                          </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                          <th>Nombre</th>
-                          <th>Fecha de expiración</th>
-                          <th>Monto</th>
-                        </tfoot>
-                      </table>
+                        <h4 class="text-center">Vencen hoy</h4>
+                            <div class="table-responsive">
+                              <table id="table_expire_today" class="table table-bordered table-striped table-warning">
+                                <thead>
+                                  <tr>
+                                    <th>Nombre</th>
+                                    <th>Fecha de expiración</th>
+                                    <th>Monto</th>
+                                  </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                  <th>Nombre</th>
+                                  <th>Fecha de expiración</th>
+                                  <th>Monto</th>
+                                </tfoot>
+                              </table>
+                            </div>
                     </div>
 
                     <div class="col-md-4">
-                      <table id="table_expire_future" class="table table-bordered table-striped table-success">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Fecha de expiración</th>
-                            <th>Monto</th>
-                          </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                          <th>Nombre</th>
-                          <th>Fecha de expiración</th>
-                          <th>Monto</th>
-                        </tfoot>
-                      </table>
+                        <h4 class="text-center">Por vencer</h4>
+                            <div class="table-responsive">
+                              <table id="table_expire_future" class="table table-bordered table-striped table-success">
+                                <thead>
+                                  <tr>
+                                    <th>Nombre</th>
+                                    <th>Fecha de expiración</th>
+                                    <th>Monto</th>
+                                  </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                  <th>Nombre</th>
+                                  <th>Fecha de expiración</th>
+                                  <th>Monto</th>
+                                </tfoot>
+                              </table>
+                            </div>
                     </div>
                   </div>
                 </div>

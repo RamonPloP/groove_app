@@ -1,0 +1,71 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar Lead</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">Nombre <code>*</code></label>
+                <input type="text" name="lead_id" id="lead_id" value="{{ lead.id }}" hidden required>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Nombre" value="{{ lead.name }}" required>
+            </div>
+            <div class="form-group">
+              <label for="assist_date">Fecha de agenda <code>*</code></label>
+              <input type="date" name="assist_date" class="form-control" id="assist_date" value="{{ lead.assist_date }}" required>
+            </div>
+            <div class="form-group">
+              <label for="class_id">Clase muestra <code>*</code></label>
+                <select name="class_id" id="class_id" class="form-control select2" required>
+                    <option value="">Selecciona una opción</option>
+                    {% for class in classes %}
+                        <option value="{{ class.id }}" {% if lead.sample_class == class.id %} selected="selected" {% endif %}>{{ class.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="address">Edad <code>*</code></label>
+              <input type="number" name="age" class="form-control" id="age" placeholder="Edad" value="{{ lead.age }}" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Teléfono <code>*</code></label>
+              <input type="tel" name="phone" class="form-control" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono (123-456-7890)" value="{{ lead.phone }}" required>
+            </div>
+            <div class="form-group">
+              <label for="how_find_us">¿Cómo nos encontró? <code>*</code></label>
+              <select name="how_find_us" id="how_find_us" class="form-control select2" required>
+                <option value="">Selecciona una opción</option>
+                <option value="0" {% if lead.social_media_link == 0 %} selected="selected" {% endif %}>Facebook</option>
+                <option value="1" {% if lead.social_media_link == 1 %} selected="selected" {% endif %}>WhatsApp</option>
+                <option value="2" {% if lead.social_media_link == 2 %} selected="selected" {% endif %}>Instagram</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- /.modal-dialog -->
+
+<script>
+
+    $('.select2').select2({
+        placeholder: 'Selecciona una opción',
+        allowClear: true,
+    });
+</script>

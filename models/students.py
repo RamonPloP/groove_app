@@ -57,6 +57,7 @@ class Students(db.Model):
             'second_last_name': self.second_last_name,
             'start_date': self.start_date,
             'expire_date': self.expire_date,
+            'is_up_to_date': self.is_up_to_date,
             'email': self.email,
             'membership_id': self.membership_id,
             'membership': self.membership,

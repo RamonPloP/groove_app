@@ -53,7 +53,7 @@
             </div>
         <div class="col-md-12" id="total_group">
             <div class="form-group">
-                    <label for="name">Cantidad <code>*</code></label>
+                    <label for="total">Cantidad <code>*</code></label>
                     <input type="text" name="total" min="0" class="form-control" id="total" placeholder="Cantidad" required>
                 </div>
         </div>
@@ -67,7 +67,9 @@
   <!-- /.modal-content -->
 </div>
 <!-- /.modal-dialog -->
+
 <script>
+
 document.getElementById("description").hidden = true;
 document.getElementById("description").querySelector('input').disabled = true;
 document.getElementById("members").hidden = true;
@@ -99,8 +101,6 @@ $('#concept').on('change', () => {
     }
 
 });
-
-$('#total').maskMoney({prefix: '$'});
 
 $('.select2').select2({
     placeholder: 'Selecciona una opción',

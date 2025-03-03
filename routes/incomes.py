@@ -1,13 +1,12 @@
 from flask import Blueprint, render_template, jsonify
 from flask_login import login_required
 from models.students import Students
-from models.teachers import Teachers
 from models.utils import is_admin
 from models.income_concepts import IncomeConcepts
 from models.incomes import Incomes
 from models.payment_types import PaymentTypes
 from db import db
-from controllers.incomesController import addEditIncome, deleteIncome
+from controllers.incomesController import addEditIncome, deleteIncome, filter_incomes_by_date
 import logging
 from datetime import datetime
 
@@ -44,11 +43,7 @@ def incomes_list_view():
 @is_admin
 @login_required
 def classes_list():
-    incomes = Incomes.get_all()
-    incomes = [income_concept.to_dict() for income_concept in incomes]
-    for income in incomes:
-        income['date'] = datetime.strftime(income['date'], '%d/%m/%Y')
-    return jsonify(incomes)
+    return filter_incomes_by_date()
 
 @incomes.route('/add')
 @is_admin

@@ -3,7 +3,7 @@ from models.income_concepts import IncomeConcepts
 from sqlalchemy.exc import IntegrityError
 from models.payment_types import PaymentTypes
 from models.students import Students
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from models.memberships import Memberships
 from db import db
 from marshmallow import ValidationError
@@ -12,6 +12,55 @@ from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
+
+def filter_incomes_by_date():
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+
+    try:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+    except ValueError as e:
+        logger.error(f"Fecha inválida: {e}")
+        return make_response("Fecha inválida. Usa el formato YYYY-MM-DD.", 400)
+
+    query = db.session.query(Incomes)
+
+    if start_date:
+        query = query.filter(Incomes.date >= start_date)
+    if end_date:
+        query = query.filter(Incomes.date <= end_date)
+
+    incomes = query.all()
+
+    # Calcular el total de ingresos
+    total_incomes = sum(income.amount for income in incomes)
+
+    # Agrupar por concepto de ingreso
+    incomes_by_concept = {}
+    for income in incomes:
+        concept_name = income.income_concept
+        incomes_by_concept[concept_name] = incomes_by_concept.get(concept_name, 0) + income.amount
+
+    # Convertir a lista para el frontend
+    incomes_list = [income.to_dict() for income in incomes]
+
+    for income in incomes_list:
+        income['date'] = datetime.strftime(income['date'], '%d/%m/%Y')
+
+    # Formatear los datos de la gráfica
+    chart_data = []
+    for concept, total in incomes_by_concept.items():
+        chart_data.append({'concept': concept, 'total': total})
+
+    response_data = {
+        'incomes': incomes_list,
+        'total_incomes': total_incomes,
+        'incomes_by_concept': incomes_by_concept,
+        'chart_data': chart_data  # Incluye los datos de la gráfica
+    }
+
+    return jsonify(response_data)
 
 def addEditIncome():
     data = request.get_json()

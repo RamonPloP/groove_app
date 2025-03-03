@@ -2,12 +2,56 @@ from models.expenses import Expenses
 from models.expense_concepts import ExpenseConcepts
 from models.teachers import Teachers
 from models.payment_types import PaymentTypes
-from flask import request, make_response
+from flask import request, make_response, jsonify
+from datetime import datetime
 from db import db
 from marshmallow import ValidationError
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def filter_expenses_by_date():
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+
+    try:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+    except ValueError as e:
+        logger.error(f"Fecha inválida: {e}")
+        return make_response("Fecha inválida. Usa el formato YYYY-MM-DD.", 400)
+
+    query = db.session.query(Expenses)
+
+    if start_date:
+        query = query.filter(Expenses.date >= start_date)
+    if end_date:
+        query = query.filter(Expenses.date <= end_date)
+
+    expenses = query.all()
+
+    # Calcular el total de egresos
+    total_expenses = sum(expense.amount for expense in expenses)
+
+    # Agrupar por concepto de egreso
+    expenses_by_concept = {}
+    for expense in expenses:
+        concept_name = expense.expense_concept
+        expenses_by_concept[concept_name] = expenses_by_concept.get(concept_name, 0) + expense.amount
+
+    # Convertir a lista para el frontend
+    expenses_list = [expense.to_dict() for expense in expenses]
+    for expense in expenses_list:
+        expense['date'] = datetime.strftime(expense['date'], '%d/%m/%Y')
+
+    response_data = {
+        'expenses': expenses_list,
+        'total_expenses': total_expenses,
+        'expenses_by_concept': expenses_by_concept
+    }
+
+    return jsonify(response_data)
 
 
 def addEditExpense():

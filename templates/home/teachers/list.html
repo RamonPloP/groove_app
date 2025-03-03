@@ -225,7 +225,7 @@ function update_table(data) {
         teacher.push(element.id)
         teacher.push(element.name)
         teacher.push(element.phone)
-        teacher.push(element.payment)
+        teacher.push('$'+element.payment)
         let classes = ''
         for(let i in element.classes){
             classes += '<span class="badge badge-success">'+element.classes[i]+'</span> '

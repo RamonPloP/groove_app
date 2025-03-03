@@ -48,14 +48,57 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+          <div class="row">
+              <div class="col-12">
+                  <div class="card">
+                      <div class="card-body d-flex justify-content-center">
+                          <canvas id="graficaEgresos" width="400px" height="400px"></canvas>
+                      </div>
+
+                      <div class="card-header">
+                          <h3 class="card-title">Filtros</h3>
+                      </div>
+                      <div class="row card-body">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="start_date_filter">Fecha de inicio</label>
+                            <input type="date" id="start_date_filter" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="end_date_filter">Fecha de fin</label>
+                            <input type="date" id="end_date_filter" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary form-control" onclick="filterExpenses()">Filtrar</button>
+                        </div>
+                    </div>
+
+                    </div>
+                    <div class="row card-body">
+                        <div class="col-md-3">
+                            <h3 id="total">Total egresos: $0</h3>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+
         <div class="row">
           <div class="col-12">
+
             <div class="card">
+
               <div class="card-header">
                 <h3 class="card-title">Listado de egresos en el sistema</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+
                 <table id="datatable_list" class="table table-bordered table-striped">
                   <thead>
                   <tr>
@@ -150,9 +193,6 @@
         var form = $("#addForm")[0]
         let data_form = new FormData(form)
 
-        if(!data_form.get('id')){
-            data_form.set('total', $('#total').maskMoney('unmasked')[0]);
-        }
         if (!form.checkValidity())
             form.reportValidity()
         else {
@@ -192,13 +232,19 @@
         });
      }
 
-     /*Funtion to get de data in json and pass to the datatable*/
 function get_data(url) {
-        $.getJSON(url, function (data) {
-                update_table(data)
-            }
-        );
-    }
+    $.getJSON(url, function (data) {
+        update_table(data.expenses);
+        update_total(data.total_expenses);
+        update_graph(data.expenses_by_concept);  // Actualiza la gráfica con los datos filtrados o nuevos
+    });
+}
+
+function update_total(total) {
+    var formattedTotal = total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    $("#total").text("Total de egresos: " + formattedTotal);
+}
+
 
 /*Funtion to generate de datatable and fill whit de json data */
 
@@ -270,6 +316,66 @@ function delete_expense(id) {
     });
 }
 
+function update_graph(expenses_by_concept) {
+    // Si ya existe la gráfica, destrúyela
+    if (window.miGrafica) {
+        window.miGrafica.destroy();
+    }
+
+    // Tomar las nuevas etiquetas y valores
+    const labels = Object.keys(expenses_by_concept);
+    const values = Object.values(expenses_by_concept);
+
+    // Crear la gráfica con los nuevos datos
+    const ctx = document.getElementById("graficaEgresos").getContext("2d");
+
+    window.miGrafica = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Egresos por Concepto",
+                data: values,
+                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0"],
+            }]
+        },
+        options: {
+            responsive: false,  // ⚠️ Desactivar la responsividad
+            maintainAspectRatio: false  // ⚠️ Permitir tamaños personalizados
+        }
+    });
+}
+
+function filterExpenses() {
+    var startDate = $('#start_date_filter').val();
+    var endDate = $('#end_date_filter').val();
+
+    // Crear la URL con los parámetros de fecha
+    var url = '/expenses/list?page=0'; // Puedes agregar paginación si la necesitas
+    if (startDate) {
+        url += '&start_date=' + startDate;
+    }
+    if (endDate) {
+        url += '&end_date=' + endDate;
+    }
+
+    // Obtener los datos filtrados
+    get_data(url);
+}
+function cargarDatos() {
+    fetch("/expenses/list")
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("total").innerText = "Total egresos: $" + data.total_expenses.toFixed(2);
+
+        // Actualizar la gráfica con los datos completos al cargarla por primera vez
+        update_graph(data.expenses_by_concept);
+    })
+    .catch(error => console.error("Error al cargar datos:", error));
+}
+
+
+        cargarDatos();
 
   </script>
 

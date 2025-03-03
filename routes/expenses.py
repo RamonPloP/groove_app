@@ -8,7 +8,7 @@ from models.expense_concepts import ExpenseConcepts
 from models.expenses import Expenses
 from models.payment_types import PaymentTypes
 from db import db
-from controllers.expensesController import addEditExpense, deleteExpense
+from controllers.expensesController import addEditExpense, deleteExpense, filter_expenses_by_date
 import logging
 from datetime import datetime
 
@@ -44,11 +44,7 @@ def expenses_list_view():
 @is_admin
 @login_required
 def classes_list():
-    expenses = Expenses.get_all()
-    expenses = [expense_concept.to_dict() for expense_concept in expenses]
-    for expense in expenses:
-        expense['date'] = datetime.strftime(expense['date'], '%d/%m/%Y')
-    return jsonify(expenses)
+    return filter_expenses_by_date()
 
 @expenses.route('/add')
 @is_admin

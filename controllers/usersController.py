@@ -29,7 +29,7 @@ def editUsers():
     username = data.get('username')
     name = data.get('name')
     password = generate_password_hash(data.get('password'), method='sha256')
-    user = Users.query.filter_by(username=username).first()
+    user = Users.query.filter(Users.username == username, Users.id != user_id).first()
     if user:
         return make_response('Ya hay un usuario registrado con ese correo.', 501)
     role_post = int(data.get('role'))

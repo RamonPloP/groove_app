@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Lista de Egresos {% endblock %}
+{% block title %} Miembros actvos{% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -34,13 +34,8 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1><i class="fa-solid fa-receipt nav-icon"></i> Egresos</h1>
+            <h1><i class="fa-solid fa-chart-line nav-icon"></i> Miembros activos</h1>
           </div>
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-default float-right" onclick="add_new(this)" data-toggle="modal" data-target="#modal-default">
-                  + Agregar
-                </button>
-            </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -48,82 +43,42 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-          <div class="row">
-              <div class="col-12">
-                  <div class="card">
-                      <div class="card-body d-flex justify-content-center">
-                          <canvas id="graficaEgresos" width="400px" height="400px"></canvas>
-                      </div>
-
-                      <div class="card-header">
-                          <h3 class="card-title">Filtros</h3>
-                      </div>
-                      <div class="row card-body">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="start_date_filter">Fecha de inicio</label>
-                            <input type="date" id="start_date_filter" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="end_date_filter">Fecha de fin</label>
-                            <input type="date" id="end_date_filter" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-primary form-control" onclick="filterExpenses()">Filtrar</button>
-                        </div>
-                    </div>
-
-                    </div>
-                    <div class="row card-body">
-                        <div class="col-md-3">
-                            <h3 id="total">Total egresos: $0</h3>
-                        </div>
-                    </div>
-                  </div>
-              </div>
-          </div>
-
         <div class="row">
           <div class="col-12">
-
             <div class="card">
-
               <div class="card-header">
-                <h3 class="card-title">Listado de egresos en el sistema</h3>
-              </div>
               <!-- /.card-header -->
-              <div class="card-body">
+                  <div class="d-flex">
+                      <div class="card-body col-4">
+                        <table id="datatable_list" class="table table-bordered table-striped">
+                          <thead>
+                          <tr>
+                            <th>Membresía</th>
+                            <th>Alumnos</th>
+                            <th>Total</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="card-body col-8 d-flex justify-content-center" style="height: 300px">
+                          <canvas id="grafica"></canvas>
+                      </div>
+                  </div>
 
-                <table id="datatable_list" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Concepto</th>
-                    <th>Descripción</th>
-                    <th>Tipo de pago</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                  <tfoot>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Concepto</th>
-                    <th>Descripción</th>
-                    <th>Tipo de pago</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
-                  </tfoot>
-                </table>
-              </div>
+                  <div class="card-body col-6">
+                      <h4 id="inactives"></h4>
+                      <div class="d-flex flex-column align-items-center justify-content-center">
+                          <p style="font-size: 120px;" id="total_members"></p>
+                          <h2>Total de miembros</h2>
+                      </div>
+                        <h4 id="amount_total"></h4>
+                  </div>
+
+                  <br>
+
+                </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -168,6 +123,6 @@
 
     <script src="/static/assets/plugins/inputmask/jquery.maskMoney.min.js"></script>
 
-  <script src="/static/js/expenses/expenses_list.js"></script>
+    <script src="/static/js/students/actives.js"></script>
 
 {% endblock javascripts %}

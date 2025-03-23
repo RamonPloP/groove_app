@@ -28,21 +28,21 @@ def get_expirations(type):
     today = datetime.now(timezone('America/Chihuahua')).date()
 
     if type == 'expired':
-        expired = db.session.query(Students).filter(func.date(Students.expire_date) < today, Students.is_up_to_date == False).all()
+        expired = db.session.query(Students).filter(func.date(Students.expire_date) < today, Students.is_up_to_date == False).filter_by(status=1).all()
         for expire in expired:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expired = [expire.to_dict_expired_control() for expire in expired]
         return expired
 
     elif type == 'expire_today':
-        expire_today = db.session.query(Students).filter(func.date(Students.expire_date) == today, Students.is_up_to_date == False).all()
+        expire_today = db.session.query(Students).filter(func.date(Students.expire_date) == today, Students.is_up_to_date == False).filter_by(status=1).all()
         for expire in expire_today:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expire_today = [expire.to_dict_expired_control() for expire in expire_today]
         return expire_today
 
     elif type == 'expire_future':
-        expire_future = db.session.query(Students).filter(func.date(Students.expire_date) > today).all()
+        expire_future = db.session.query(Students).filter(func.date(Students.expire_date) > today).filter_by(status=1).all()
         for expire in expire_future:
             expire.amount = Memberships.find_by_id(expire.membership_id).cost
         expire_future = [expire_future.to_dict_expired_control() for expire_future in expire_future]

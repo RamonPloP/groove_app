@@ -76,3 +76,30 @@ def students_add_regulation_pdf_modal(id):
 @login_required
 def students_add_regulation_pdf():
     return addRegulationPDF()
+
+@students.route('/active-members')
+@is_admin
+@login_required
+def active_members_view():
+    return render_template('home/students/actives.html')
+
+@students.route('/active-members/get')
+@is_admin
+@login_required
+def active_members():
+    memberships = Memberships.get_all()
+    info = []
+    total_members = 0
+    amount_total = 0
+    for membership in memberships:
+        total_members += db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count()
+        amount_total += membership.cost*int(db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count())
+        info.append({
+            'name': membership.name,
+            'actives':  db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count(),
+            'total': membership.cost*int(db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count())
+        })
+
+    data = [info, db.session.query(Students).filter_by(status=0).count(), total_members, amount_total]
+
+    return data

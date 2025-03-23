@@ -13,6 +13,7 @@ class Students(db.Model):
     start_date = db.Column(db.Date)
     expire_date = db.Column(db.Date)
     email = db.Column(db.String(150))
+    status = db.Column(db.Boolean, default=True)
     membership_id = db.Column(db.Integer, db.ForeignKey('memberships.id'), nullable=False)
     is_up_to_date = db.Column(db.Boolean, default=False, nullable=False)
     how_find_us = db.Column(Enum(SocialMediaType), nullable=False)
@@ -101,7 +102,7 @@ class Students(db.Model):
 
     @classmethod
     def get_all(cls):
-        students = Students.query.all()
+        students = Students.query.filter_by(status=1).all()
         return students
 
     @classmethod

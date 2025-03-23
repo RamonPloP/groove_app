@@ -75,11 +75,14 @@ function update_table(data) {
         let income_concept = []
         income_concept.push(element.id)
         income_concept.push(element.name)
+        /*
         income_concept.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
                         '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_income_concept('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
+
+         */
         income_concepts.push(income_concept)
     })
     $('#datatable_list').DataTable().clear();
@@ -96,8 +99,7 @@ function update_table(data) {
         data: income_concepts,
         columns: [
             {title: "ID"},
-            {title: "NOMBRE"},
-            {title: "ACCIONES"}
+            {title: "NOMBRE"}
         ]
     });
 }

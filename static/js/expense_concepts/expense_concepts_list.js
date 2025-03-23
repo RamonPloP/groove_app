@@ -75,11 +75,14 @@ function update_table(data) {
         let expense_concept = []
         expense_concept.push(element.id)
         expense_concept.push(element.name)
+        /*
         expense_concept.push('<button type="button" class="btn btn-outline-primary" onclick="show_info('+element.id +', this)">'+
                             '<i class="fas fa-edit"></i>'+
                         '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_expense_concept('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
+
+         */
         expense_concepts.push(expense_concept)
     })
     $('#datatable_list').DataTable().clear();
@@ -96,8 +99,7 @@ function update_table(data) {
         data: expense_concepts,
         columns: [
             {title: "ID"},
-            {title: "NOMBRE"},
-            {title: "ACCIONES"}
+            {title: "NOMBRE"}
         ]
     });
 }

@@ -5,6 +5,8 @@ from models.memberships import Memberships
 from models.teachers import Teachers
 from models.utils import is_admin
 from models.students import Students
+from datetime import datetime
+from flask import request
 from db import db
 from controllers.studentsController import addEditStudent, deleteStudent, addRegulationPDF
 import logging
@@ -87,19 +89,43 @@ def active_members_view():
 @is_admin
 @login_required
 def active_members():
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    if not start_date or not end_date:
+        current_date = datetime.now()
+        start_date = datetime(current_date.year, current_date.month, 1).date()
+        end_date = current_date.date()
+
+    start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     memberships = Memberships.get_all()
     info = []
     total_members = 0
     amount_total = 0
+
     for membership in memberships:
-        total_members += db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count()
-        amount_total += membership.cost*int(db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count())
+        active_students_query = db.session.query(Students).filter(Students.membership_id == membership.id).filter_by(
+            status=1)
+
+        active_students_query = active_students_query.filter(Students.start_date >= start_date,
+                                                             Students.start_date <= end_date)
+
+        active_students_count = active_students_query.count()
+
+        total_members += active_students_count
+        amount_total += membership.cost * active_students_count
+
         info.append({
             'name': membership.name,
-            'actives':  db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count(),
-            'total': membership.cost*int(db.session.query(Students).filter(Students.membership_id==membership.id).filter_by(status=1).count())
+            'actives': active_students_count,
+            'total': membership.cost * active_students_count
         })
 
-    data = [info, db.session.query(Students).filter_by(status=0).count(), total_members, amount_total]
+    inactive_students_count = db.session.query(Students).filter_by(status=0).filter(Students.start_date >= start_date,
+                                                                                    Students.start_date <= end_date).count()
+
+    data = [info, inactive_students_count, total_members, amount_total]
 
     return data

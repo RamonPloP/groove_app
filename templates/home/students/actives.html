@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Miembros actvos{% endblock %}
+{% block title %} Miembros activos{% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} {% endblock body_class %}
@@ -44,10 +44,25 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
+
           <div class="col-12">
             <div class="card">
               <div class="card-header">
               <!-- /.card-header -->
+                  <div class="d-flex justify-content-center" style="margin-bottom: 4rem;">
+                        <div class="col-3">
+                            <label for="startDateFilter">Fecha de inicio:</label>
+                            <input type="date" id="startDateFilter" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <label for="endDateFilter">Fecha de fin:</label>
+                            <input type="date" id="endDateFilter" class="form-control">
+                        </div>
+                        <div class="d-flex col-3 align-items-end">
+                            <button id="filterButton" class="col-4 btn btn-primary">Filtrar</button>
+                        </div>
+
+                  </div>
                   <div class="d-flex">
                       <div class="card-body col-4">
                         <table id="datatable_list" class="table table-bordered table-striped">

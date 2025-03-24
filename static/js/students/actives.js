@@ -1,33 +1,42 @@
 $(function() {
+  // Al cargar la página, obtenemos la fecha actual y el primer día del año actual
   let currentDate = new Date();
-  let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  let today = currentDate.toISOString().split('T')[0];
+  let firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1); // 1 de enero del año actual
+  let today = currentDate.toISOString().split('T')[0]; // Obtiene la fecha de hoy en formato YYYY-MM-DD
 
-  $('#startDateFilter').val(firstDayOfMonth.toISOString().split('T')[0]);
+  // Establecer las fechas en los campos de fecha de inicio y fin
+  $('#startDateFilter').val(firstDayOfYear.toISOString().split('T')[0]);
   $('#endDateFilter').val(today);
 
-  get_data('/students/active-members/get', firstDayOfMonth.toISOString().split('T')[0], today);
+  // Llamada inicial para obtener los datos con el rango de fechas predeterminado (todo el año hasta hoy)
+  get_data('/students/active-members/get', firstDayOfYear.toISOString().split('T')[0], today);
 
+  // Evento para el botón de filtro
   $('#filterButton').click(function() {
-
+    // Captura las fechas seleccionadas
     var startDate = $('#startDateFilter').val();
     var endDate = $('#endDateFilter').val();
 
+    // Verificación de que ambas fechas estén seleccionadas
     if (!startDate || !endDate) {
       alert('Por favor, selecciona ambas fechas.');
       return;
     }
 
+    // Verificar que la fecha de inicio no sea posterior a la fecha de fin
     if (startDate > endDate) {
       alert('La fecha de inicio no puede ser posterior a la fecha de fin.');
       return;
     }
 
+    // Realizar la solicitud con las fechas seleccionadas
     get_data('/students/active-members/get', startDate, endDate);
   });
 });
 
+// Modificar la función get_data para aceptar las fechas
 function get_data(url, startDate = '', endDate = '') {
+  // Enviar la solicitud GET con los parámetros de fecha
   $.getJSON(url, { start_date: startDate, end_date: endDate }, function(data) {
     update_table(data[0]);
     update_graph(data[0]);

@@ -94,7 +94,7 @@ def active_members():
 
     if not start_date or not end_date:
         current_date = datetime.now()
-        start_date = datetime(current_date.year, current_date.month, 1).date()
+        start_date = datetime(current_date.year, 0, 1).date()
         end_date = current_date.date()
 
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()

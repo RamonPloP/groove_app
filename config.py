@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 import logging
 from logging import handlers
+from dotenv import load_dotenv
+load_dotenv()
+
 
 logger = logging.getLogger()
 

@@ -50,8 +50,10 @@ def addEditStudent():
         student.birth_place = data.get('birth_place')
         student.nationality = data.get('nationality')
 
-
-        student.blood_type = BloodType(int(data.get('blood_type')))
+        if data.get('blood_type'):
+            student.blood_type = BloodType(int(data.get('blood_type')))
+        else:
+            student.blood_type = None
 
         student.phone = data.get('phone')
         student.dad_name = data.get('dad_name')

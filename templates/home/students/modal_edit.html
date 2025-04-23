@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
               <label for="last_name">Apellido <code>*</code></label>
-              <input type="text" name="last_name" class="form-control" value="{{ member.last_name }}" id="last_name" placeholder="Apellido" required>
+              <input type="text" name="last_name" class="form-control" value="{{ member.last_name }}" id="last_name" placeholder="Apellido" >
             </div>
             <div class="form-group">
               <label for="middle_name">Segundo apellido</label>
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
               <label for="email">Correo electrónico <code>*</code></label>
-              <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico" value="{{ member.email }}" required>
+              <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico" value="{{ member.email }}" >
             </div>
             <div class="form-group">
               <label for="membership_id">Membresía <code>*</code></label>
@@ -64,7 +64,7 @@
             </div>
           <div class="form-group">
                   <label>¿Tiene alergias? <code>*</code></label>
-                  <select name="has_allergies" id="has_allergies" class="form-control" required>
+                  <select name="has_allergies" id="has_allergies" class="form-control" >
                     <option value="">Selecciona una opción</option>
                     <option value="true" {% if member.has_allergies == 1 %} selected="selected" {% endif %}>Sí</option>
                     <option value="false" {% if member.has_allergies == 0 %} selected="selected" {% endif %}>No</option>
@@ -73,12 +73,12 @@
 
                 <div id="allergies_group" class="form-group" hidden>
                     <label for="allergies">Alergias (si aplica)</label>
-                    <input type="text" name="allergies" class="form-control" id="allergies" value="{{ member.allergies or '' }}" placeholder="Especifica las alergias" disabled required>
+                    <input type="text" name="allergies" class="form-control" id="allergies" value="{{ member.allergies or '' }}" placeholder="Especifica las alergias" disabled >
                 </div>
 
                 <div class="form-group">
                   <label>¿Tiene actividades restringidas? <code>*</code></label>
-                  <select name="has_restricted_activities" id="has_restricted_activities" class="form-control" required>
+                  <select name="has_restricted_activities" id="has_restricted_activities" class="form-control" >
                     <option value="">Selecciona una opción</option>
                     <option value="true" {% if member.has_restricted_activities == 1 %} selected="selected" {% endif %} >Sí</option>
                     <option value="false" {% if member.has_restricted_activities == 0 %} selected="selected" {% endif %}>No</option>
@@ -87,12 +87,12 @@
 
                 <div id="restricted_activities_group" class="form-group" hidden>
                     <label for="restricted_activities">Actividades restringidas (si aplica)</label>
-                    <input type="text" name="restricted_activities" value="{{ member.restricted_activities or '' }}" class="form-control" id="restricted_activities" placeholder="Especifica las actividades restringidas" disabled required>
+                    <input type="text" name="restricted_activities" value="{{ member.restricted_activities or '' }}" class="form-control" id="restricted_activities" placeholder="Especifica las actividades restringidas" disabled >
                 </div>
 
                 <div class="form-group">
                   <label>¿Tiene alguna condición mental? <code>*</code></label>
-                  <select name="has_mental_conditions" id="has_mental_conditions" class="form-control" required>
+                  <select name="has_mental_conditions" id="has_mental_conditions" class="form-control" >
                     <option value="">Selecciona una opción</option>
                     <option value="true" {% if member.has_mental_conditions == 1 %} selected="selected" {% endif %}>Sí</option>
                     <option value="false" {% if member.has_mental_conditions == 0 %} selected="selected" {% endif %}>No</option>
@@ -101,11 +101,11 @@
 
                 <div id="mental_conditions_group" class="form-group" hidden>
                     <label for="mental_conditions">Condiciones mentales (si aplica)</label>
-                    <input type="text" value="{{ member.mental_conditions or '' }}" name="mental_conditions" class="form-control" id="mental_conditions" placeholder="Especifica las condiciones mentales" disabled required>
+                    <input type="text" value="{{ member.mental_conditions or '' }}" name="mental_conditions" class="form-control" id="mental_conditions" placeholder="Especifica las condiciones mentales" disabled >
                 </div>
            <div class="form-group">
                   <label>¿Tiene alguna enfermedad crónica? <code>*</code></label>
-                  <select name="has_chronic_disease" id="has_chronic_disease" class="form-control" required>
+                  <select name="has_chronic_disease" id="has_chronic_disease" class="form-control" >
                     <option value="">Selecciona una opción</option>
                     <option value="true" {% if member.has_chronic_disease == 1 %} selected="selected" {% endif %}>Sí</option>
                     <option value="false"  {% if member.has_chronic_disease == 0 %} selected="selected" {% endif %}>No</option>
@@ -114,30 +114,30 @@
 
                 <div id="chronic_disease_group" class="form-group" hidden>
                     <label for="chronic_disease">Enfermedad crónica (si aplica)</label>
-                    <input type="text" value="{{ member.chronic_disease or '' }}" name="chronic_disease" class="form-control" id="chronic_disease" placeholder="Especifica la enfermedad" disabled required>
+                    <input type="text" value="{{ member.chronic_disease or '' }}" name="chronic_disease" class="form-control" id="chronic_disease" placeholder="Especifica la enfermedad" disabled >
                 </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="address">Dirección <code>*</code></label>
-              <input type="text" name="address" value="{{ member.address }}" class="form-control" id="address" placeholder="Dirección" required>
+              <input type="text" name="address" value="{{ member.address }}" class="form-control" id="address" placeholder="Dirección" >
             </div>
             <div class="form-group">
               <label for="birth_date">Fecha de nacimiento <code>*</code></label>
-              <input type="date" name="birth_date" class="form-control" id="birth_date" value="{{ member.birth_date }}" required>
+              <input type="date" name="birth_date" class="form-control" id="birth_date" value="{{ member.birth_date }}" >
             </div>
             <div class="form-group">
               <label for="birth_place">Lugar de nacimiento <code>*</code></label>
-              <input type="text" name="birth_place" class="form-control" id="birth_place" value="{{ member.birth_place }}" placeholder="Lugar de nacimiento" required>
+              <input type="text" name="birth_place" class="form-control" id="birth_place" value="{{ member.birth_place }}" placeholder="Lugar de nacimiento" >
             </div>
             <div class="form-group">
               <label for="nationality">Nacionalidad <code>*</code></label>
-              <input type="text" name="nationality" class="form-control" id="nationality" value="{{ member.nationality }}" placeholder="Nacionalidad" required>
+              <input type="text" name="nationality" class="form-control" id="nationality" value="{{ member.nationality }}" placeholder="Nacionalidad" >
             </div>
             <div class="form-group">
               <label for="blood_type">Tipo de sangre <code>*</code></label>
-                <select name="blood_type" id="blood_type" class="form-control select2" required>
+                <select name="blood_type" id="blood_type" class="form-control select2" >
                   <option value="">Selecciona una opción</option>
                   <option value="0" {% if member.blood_type == 0 %} selected="selected" {% endif %}>A+</option>
                   <option value="1" {% if member.blood_type == 1 %} selected="selected" {% endif %}>A-</option>
@@ -151,31 +151,31 @@
             </div>
             <div class="form-group">
               <label for="phone">Teléfono <code>*</code></label>
-              <input type="tel" name="phone" class="form-control" id="phone" value="{{ member.phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono (123-456-7890)" required>
+              <input type="tel" name="phone" class="form-control" id="phone" value="{{ member.phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono (123-456-7890)" >
             </div>
             <div class="form-group">
               <label for="dad_name">Nombre del padre <code>*</code></label>
-              <input type="text" name="dad_name" class="form-control" id="dad_name" value="{{ member.dad_name }}" placeholder="Nombre del padre" required>
+              <input type="text" name="dad_name" class="form-control" id="dad_name" value="{{ member.dad_name }}" placeholder="Nombre del padre" >
             </div>
             <div class="form-group">
               <label for="dad_phone">Teléfono del padre <code>*</code></label>
-              <input type="tel" name="dad_phone" class="form-control" id="dad_phone" value="{{ member.dad_phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono del padre" required>
+              <input type="tel" name="dad_phone" class="form-control" id="dad_phone" value="{{ member.dad_phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono del padre" >
             </div>
             <div class="form-group">
               <label for="mom_name">Nombre de la madre <code>*</code></label>
-              <input type="text" name="mom_name" class="form-control" id="mom_name" value="{{ member.mom_name }}" placeholder="Nombre de la madre" required>
+              <input type="text" name="mom_name" class="form-control" id="mom_name" value="{{ member.mom_name }}" placeholder="Nombre de la madre" >
             </div>
             <div class="form-group">
               <label for="mom_phone">Teléfono de la madre <code>*</code></label>
-              <input type="tel" name="mom_phone" class="form-control" id="mom_phone" value="{{ member.mom_phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono de la madre" required>
+              <input type="tel" name="mom_phone" class="form-control" id="mom_phone" value="{{ member.mom_phone }}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Teléfono de la madre" >
             </div>
             <div class="form-group">
               <label for="emergency_contact_name">Nombre de contacto de emergencia <code>*</code></label>
-              <input type="text" name="emergency_contact_name" class="form-control" value="{{ member.emergency_contact_name }}" id="emergency_contact_name" placeholder="Nombre del contacto de emergencia" required>
+              <input type="text" name="emergency_contact_name" class="form-control" value="{{ member.emergency_contact_name }}" id="emergency_contact_name" placeholder="Nombre del contacto de emergencia" >
             </div>
             <div class="form-group">
               <label for="emergency_contact_phone">Número del contacto de emergencia <code>*</code></label>
-              <input type="text" name="emergency_contact_phone" class="form-control" value="{{ member.emergency_contact_phone }}" id="emergency_contact_phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Número del contacto de emergencia" required>
+              <input type="text" name="emergency_contact_phone" class="form-control" value="{{ member.emergency_contact_phone }}" id="emergency_contact_phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}[0-9]{2}" placeholder="Número del contacto de emergencia" >
             </div>
 
           </div>

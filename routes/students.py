@@ -53,7 +53,7 @@ def students_list():
         student.birth_date = student.birth_date.strftime('%Y/%m/%d')
         student.membership = Memberships.find_by_id(student.membership_id).name
         student.how_find_us_text = SocialMediaType(int(student.how_find_us)).name
-        student.blood_type_text = str(BloodType(int(student.blood_type)))
+        student.blood_type_text = str(BloodType(int(student.blood_type))) if student.blood_type else ""
         student.dance_reason_text = str(DanceReasons(int(student.dance_reason)))
     students = [student.to_dict() for student in students]
     return students

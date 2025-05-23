@@ -130,7 +130,13 @@ def addEditIncome():
         total = int(data.get('total'))
 
         if not income:
-            return make_response('Ingreso no encontrado.', 404)
+            return make_response('Ingreso no encontrado.', 401)
+
+        if income.income_concept == "Mensualidad" and int(data.get('concept')) != 4:
+            return make_response('No puedes cambiar el tipo de concepto cuando inicialmente fue una mensualidad', 401)
+
+        if income.income_concept != "Mensualidad" and int(data.get('concept')) == 4:
+            return make_response('No puedes cambiar el tipo de concepto a una mensualidad, ingresa esta mensualidad como un nuevo ingreso', 401)
 
         income.date = date
         income.income_concept = concept

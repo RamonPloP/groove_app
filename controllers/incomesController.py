@@ -73,6 +73,12 @@ def addEditIncome():
         concept = 'Otro'
 
     member = int(data.get('member')) if data.get('member') else None
+
+    member_up_to_date = db.session.query(Students).filter_by(status=1,id=member,is_up_to_date=1).first()
+
+    if member_up_to_date:
+        return make_response('Este miembro ya pagó la mensualidad de este mes',501)
+
     if concept_id in [4, 5]:
         member = Students.find_by_id(int(data.get('member')))
         member.is_up_to_date = True

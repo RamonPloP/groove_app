@@ -1,8 +1,8 @@
 
 document.getElementById("description").hidden = true;
 document.getElementById("description").querySelector('input').disabled = true;
-document.getElementById("members").hidden = true;
-document.getElementById("members").querySelector('select').disabled = true;
+//document.getElementById("members").hidden = true;
+//document.getElementById("members").querySelector('select').disabled = true;
 
 $('#concept').on('change', () => {
     if (['other', '9', '8'].includes($('#concept').val())){
@@ -13,13 +13,13 @@ $('#concept').on('change', () => {
         document.getElementById("description").querySelector('input').disabled = true;  // Deshabilitar el input
     }
 
-    if ($('#concept').val() == 4 || $('#concept').val() == 5) {
-        document.getElementById("members").hidden = false;
-        document.getElementById("members").querySelector('select').disabled = false;  // Habilitar el select
-    } else {
-        document.getElementById("members").hidden = true;
-        document.getElementById("members").querySelector('select').disabled = true;  // Deshabilitar el select
-    }
+    //if ($('#concept').val() == 4 || $('#concept').val() == 5) {
+    //    document.getElementById("members").hidden = false;
+    //    document.getElementById("members").querySelector('select').disabled = false;  // Habilitar el select
+    //} else {
+    //    document.getElementById("members").hidden = true;
+    //    document.getElementById("members").querySelector('select').disabled = true;  // Deshabilitar el select
+    //}
 
     if ($('#concept').val() == 4 ){
         document.getElementById("total_group").hidden = true;

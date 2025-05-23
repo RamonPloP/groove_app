@@ -1,0 +1,72 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Agregar Ingreso</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form id="addForm" method="post">
+        <div class="modal-body">
+            <div class="col-md-12">
+                <div class="form-group">
+                  <input type="text" name="income_id" value="{{ income.id }}" hidden/>
+                    <label for="name">Fecha <code>*</code></label>
+                    <input type="date" name="date" class="form-control" id="date" placeholder="" value="{{ income.date }}" required>
+                </div>
+            </div>
+            <div class="col-md-12">
+
+                <div class="form-group">
+                    <label for="concept">Concepto <code>*</code></label>
+                        <select name="concept" id="concept" class="form-control select2" style="width: 100%;" required>
+                            <option value="">Selecciona una opción</option>
+                                {% for concept in concepts %}
+                                    <option value ="{{ concept.id}}" {% if concept.name == income.income_concept  %} selected="selected" {% endif %}> {{ concept.name }}  </option>
+                                {% endfor %}
+                            <option value="other">OTRO</option>
+                        </select>
+                </div>
+                <div class="form-group" id="members">
+                    <label for="name">Miembro <code>*</code></label>
+                    <select name="member" id="member" class="form-control select2" style="width: 100%;" required>
+                        <option value="">Selecciona una opción</option>
+                            {% for member in members %}
+                                <option value ="{{ member.id }}" {% if member.name == income.member  %} selected="selected" {% endif %}> {{ member.name }}  </option>
+                            {% endfor %}
+                        </select>
+                </div>
+                <div class="form-group" id="description">
+                    <label for="name">Descripción <code>*</code></label>
+                    <input type="text" name="desc" class="form-control" id="desc" {% if income.description %} value="{{income.description}}" {% endif %} placeholder="Descripción" required>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="payment">Tipo de pago <code>*</code></label>
+                        <select name="payment" id="payment" class="form-control select2" style="width: 100%;" required>
+                            <option value="">Selecciona una opción</option>
+                                {% for data in payment_types %}
+                                    <option value ="{{ data.id }}" {% if data.name == income.payment_type  %} selected="selected" {% endif %}> {{ data.name }}  </option>
+                                {% endfor %}
+                        </select>
+                </div>
+            </div>
+        <div class="col-md-12" id="total_group">
+            <div class="form-group">
+                    <label for="total">Cantidad <code>*</code></label>
+                    <input type="text" name="total" min="0" class="form-control" id="total" value="{{ income.amount }}" placeholder="Cantidad">
+                </div>
+        </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+           <button type="submit" class="btn btn-primary" onclick="register(event)">Guardar</button>
+        </div>
+     </form>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+
+<script src="/static/js/incomes/incomes_modal_add.js"></script>

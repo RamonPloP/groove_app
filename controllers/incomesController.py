@@ -74,11 +74,6 @@ def addEditIncome():
 
     member = int(data.get('member')) if data.get('member') else None
 
-    member_up_to_date = db.session.query(Students).filter_by(status=1,id=member,is_up_to_date=1).first()
-
-    if member_up_to_date:
-        return make_response('Este miembro ya pagó la mensualidad de este mes',501)
-
     if concept_id in [4, 5]:
         member = Students.find_by_id(int(data.get('member')))
         member.is_up_to_date = True
@@ -90,7 +85,7 @@ def addEditIncome():
             logger.error(f"Error al guardar: {err.messages} con los datos : {data}")
             return make_response(f"Error al guardar: {err.messages} con los datos : {data}", 501)
 
-        member = Students.find_by_id(int(data.get('member'))).name
+    member = Students.find_by_id(int(data.get('member'))).name
 
     description = data.get('desc') if concept_id in [8, 9] or concept_id == "Otro" else None
 
@@ -100,7 +95,7 @@ def addEditIncome():
         member_ = Students.find_by_id(int(data.get('member'))).membership_id
         total = int(Memberships.find_by_id(member_).cost)
 
-    if not data.get('id'):
+    if not data.get('income_id'):
         income = Incomes(
             date=date,
             income_concept=concept,
@@ -109,6 +104,13 @@ def addEditIncome():
             amount=total,
             member=member
         )
+
+        member_form = int(data.get('member')) if data.get('member') else None
+
+        member_up_to_date = db.session.query(Students).filter_by(status=1, id=member_form, is_up_to_date=1).first()
+
+        if member_up_to_date and concept_id == 4:
+            return make_response('Este miembro ya pagó la mensualidad de este mes', 501)
 
         try:
             db.session.add(income)
@@ -122,17 +124,19 @@ def addEditIncome():
             return make_response("Error de integridad en la base de datos.", 500)
 
     else:  # Actualizar ingreso
-        income_id = data.get('id')
+        income_id = int(data.get('income_id'))
         income = Incomes.query.filter_by(id=income_id).first()
+
+        total = int(data.get('total'))
 
         if not income:
             return make_response('Ingreso no encontrado.', 404)
 
         income.date = date
-        income.income_concept_id = concept
-        income.payment_type_id = payment_type
+        income.income_concept = concept
+        income.payment_type = payment_type
         income.amount = total
-        income.member_id = member  # Se actualiza solo si el concepto lo requiere
+        income.member = member  # Se actualiza solo si el concepto lo requiere
 
         # Si el concepto es 8, 9 o "other", actualizamos 'description'
         if concept_id in [8, 9] or concept_id == "other":

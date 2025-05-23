@@ -2,7 +2,7 @@ $(function() {
     get_data('/incomes/list?page=0')
 });
 
-function show_info(id, button) {
+function edit(id, button) {
     $(button).attr('disabled', true);
     axios({
         method: 'get',
@@ -84,7 +84,9 @@ function update_table(data) {
         income.push(element.member || '-');
         income.push(element.payment_type);
         income.push('$ ' + element.amount);
-        income.push('<button type="button" class="btn btn-outline-danger" onclick="delete_income(' + element.id + ', this)">' +
+        income.push('<button type="button" class="btn btn-outline-info" onclick="edit(' + element.id + ', this)">' +
+                        '<i class="fa-solid fa-pen-to-square"></i>' +
+                    '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_income(' + element.id + ', this)">' +
                         '<i class="fas fa-trash"></i>' +
                     '</button>');
         incomes.push(income);

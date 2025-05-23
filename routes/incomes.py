@@ -23,9 +23,12 @@ def incomes_crud():
 @incomes.route('/<id>')
 @is_admin
 @login_required
-def find_income_concept(id):
-    income_concept = Incomes.find_by_id(id)
-    return render_template('home/incomes/modal_edit.html', income_concept=income_concept)
+def edit_income(id):
+    income = Incomes.find_by_id(id)
+    concepts = db.session.query(IncomeConcepts).all()
+    payment_types = db.session.query(PaymentTypes).all()
+    members = db.session.query(Students).filter_by(status=1).all()
+    return render_template('home/incomes/modal_edit.html', income=income, concepts=concepts, payment_types=payment_types, members=members)
 
 @incomes.route('/delete', methods=['POST'])
 @login_required

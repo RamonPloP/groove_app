@@ -74,7 +74,7 @@ def addEditIncome():
 
     member = int(data.get('member')) if data.get('member') else None
 
-    if concept_id in [4, 5]:
+    if concept_id in [4]:
         member = Students.find_by_id(int(data.get('member')))
         member.is_up_to_date = True
         member.expire_date = member.expire_date + relativedelta(months=1)

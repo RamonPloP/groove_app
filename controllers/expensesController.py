@@ -94,15 +94,14 @@ def addEditExpense():
             return make_response('Egreso no encontrado.', 404)
 
         expense.date = date
-        expense.expense_concept_id = concept
-        expense.payment_type_id = payment_type
+        expense.expense_concept = concept
+        expense.payment_type = payment_type
         expense.amount = total
 
-        # Si el concepto es 8, actualizamos 'description'; si es 7, actualizamos con el valor de 'staff'
-        if concept == 8:
-            expense.description = description
-        elif concept == 7:
+        if concept == 'NÓMINA':
             expense.description = staff
+        else:
+            expense.description = description
 
         try:
             db.session.commit()

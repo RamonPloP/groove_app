@@ -1,17 +1,18 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h4 class="modal-title">Agregar Egreso</h4>
+      <h4 class="modal-title">Editar Egreso</h4>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <form id="addForm" method="post">
+        <input type="text" name="id" value="{{ expense.id }}" hidden/>
         <div class="modal-body">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="date">Fecha <code>*</code></label>
-                    <input type="date" name="date" class="form-control" id="date" placeholder=""  required>
+                    <input type="date" name="date" class="form-control" value="{{ expense.date }}" id="date" placeholder=""  required>
                 </div>
             </div>
             <div class="col-md-12">
@@ -21,7 +22,7 @@
                         <select name="concept" id="concept" class="form-control select2" style="width: 100%;" required>
                             <option value="">Selecciona una opción</option>
                                 {% for concept in concepts %}
-                                    <option value ="{{ concept.id }}" > {{ concept.name }}  </option>
+                                    <option value ="{{ concept.id }}" {% if expense.expense_concept == concept.name %} selected="selected" {% endif %}> {{ concept.name }}  </option>
                                 {% endfor %}
                         </select>
                 </div>
@@ -30,14 +31,14 @@
                     <select name="staff" id="worker" class="form-control select2" style="width: 100%;" required>
                         <option value="">Selecciona una opción</option>
                             {% for teacher in teachers %}
-                                <option value ="{{ teacher.id }}" > {{ teacher.name }}  </option>
+                                <option value ="{{ teacher.id }}" {% if expense.description == teacher.name and expense.expense_concept == "NÓMINA"  %} selected="selected" {% endif %}> {{ teacher.name }}  </option>
                             {% endfor %}
                             <option value="other" >OTRO</option>
                         </select>
                 </div>
                 <div class="form-group" id="description">
                     <label for="desc">Descripción <code>*</code></label>
-                    <input type="text" name="desc" class="form-control" id="desc" placeholder="Descripción" required>
+                    <input type="text" name="desc" {% if expense.description and expense.expense_concept != 'NÓMINA'  %} value="{{ expense.description }}" {% endif %} class="form-control" id="desc" placeholder="Descripción" required>
                 </div>
             </div>
             <div class="col-md-12">
@@ -46,7 +47,7 @@
                         <select name="payment" id="payment" class="form-control select2" style="width: 100%;" required>
                             <option value="">Selecciona una opción</option>
                                 {% for data in payment_types %}
-                                    <option value ="{{ data.id }}" > {{ data.name }}  </option>
+                                    <option value ="{{ data.id }}" {% if expense.payment_type == data.name %} selected="selected" {% endif %}> {{ data.name }}  </option>
                                 {% endfor %}
                         </select>
                 </div>
@@ -54,7 +55,7 @@
         <div class="col-md-12">
             <div class="form-group">
                     <label for="total">Cantidad <code>*</code></label>
-                    <input type="text" name="total" min="0" class="form-control" id="total" placeholder="Cantidad" required>
+                    <input type="text" name="total" value="{{ expense.amount }}" min="0" class="form-control" id="total" placeholder="Cantidad" required>
                 </div>
         </div>
         </div>
@@ -67,4 +68,4 @@
   <!-- /.modal-content -->
 </div>
 <!-- /.modal-dialog -->
-<script src="/static/js/expenses/expense_modal_add.js"></script>
+<script src="/static/js/expenses/expense_modal_edit.js"></script>

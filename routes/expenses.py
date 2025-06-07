@@ -26,8 +26,11 @@ def expenses_crud():
 @is_admin
 @login_required
 def find_expense_concept(id):
-    expense_concept = Expenses.find_by_id(id)
-    return render_template('home/expenses/modal_edit.html', expense_concept=expense_concept)
+    expense = Expenses.find_by_id(id)
+    concepts = db.session.query(ExpenseConcepts).all()
+    payment_types = db.session.query(PaymentTypes).all()
+    teachers = db.session.query(Teachers).all()
+    return render_template('home/expenses/modal_edit.html', expense=expense, concepts=concepts, payment_types=payment_types, teachers=teachers)
 
 @expenses.route('/delete', methods=['POST'])
 @login_required

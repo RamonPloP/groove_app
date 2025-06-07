@@ -1,7 +1,7 @@
      $(function() {
       get_data('/expenses/list?page=0')
     });
-     function show_info(id, button) {
+     function edit(id, button) {
         $(button).attr('disabled', true);
         axios({
             method: 'get',
@@ -91,7 +91,9 @@ function update_table(data) {
         }
         expense.push(element.payment_type)
         expense.push('$ '+element.amount)
-        expense.push('<button type="button" class="btn btn-outline-danger" onclick="delete_expense('+element.id +', this)">'+
+        expense.push('<button type="button" class="btn btn-outline-info" onclick="edit(' + element.id + ', this)">' +
+                        '<i class="fa-solid fa-pen-to-square"></i>' +
+                    '</button>'+'<button type="button" class="btn btn-outline-danger" onclick="delete_expense('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
         expenses.push(expense)

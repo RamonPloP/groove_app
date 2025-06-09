@@ -76,6 +76,12 @@ function update_table(data) {
     $.each(data, function (i, element) {
         let item = []
         item.push(element.id)
+        if(element.is_up_to_date == true){
+            item.push('🟢 Al día')
+        }else{
+            item.push('🟡 Pendiente')
+        }
+
         item.push(element.name)
         item.push(element.last_name)
         item.push(element.second_last_name || '-')
@@ -132,6 +138,7 @@ function update_table(data) {
         data: elements,
         columns: [
             {title: "ID"},
+            {title: "Mensualidad"},
             {title: "NOMBRE"},
             {title: "APELLIDO PATERNO"},
             {title: "APELLIDO MATERNO"},

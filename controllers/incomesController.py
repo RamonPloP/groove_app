@@ -8,7 +8,7 @@ from models.memberships import Memberships
 from db import db
 from marshmallow import ValidationError
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from datetime import datetime, date
 import logging
 
 logger = logging.getLogger(__name__)
@@ -64,26 +64,13 @@ def filter_incomes_by_date():
 
 def addEditIncome():
     data = request.get_json()
-    date = data.get('date')
+    income_date = data.get('date')
     if data.get('concept') != 'other':
         concept_id = int(data.get('concept'))
         concept = IncomeConcepts.find_by_id(concept_id).name if concept_id else None
     else:
         concept_id = 'Otro'
         concept = 'Otro'
-
-    member = int(data.get('member')) if data.get('member') else None
-
-    if concept_id in [4]:
-        member = Students.find_by_id(int(data.get('member')))
-        member.is_up_to_date = True
-        member.expire_date = member.expire_date + relativedelta(months=1)
-        try:
-            db.session.add(member)
-            db.session.commit()
-        except ValidationError as err:
-            logger.error(f"Error al guardar: {err.messages} con los datos : {data}")
-            return make_response(f"Error al guardar: {err.messages} con los datos : {data}", 501)
 
     member = Students.find_by_id(int(data.get('member'))).name
 
@@ -97,7 +84,7 @@ def addEditIncome():
 
     if not data.get('income_id'):
         income = Incomes(
-            date=date,
+            date=income_date,
             income_concept=concept,
             description=description,
             payment_type=payment_type,
@@ -111,6 +98,16 @@ def addEditIncome():
 
         if member_up_to_date and concept_id == 4:
             return make_response('Este miembro ya pagó la mensualidad de este mes', 501)
+
+        if concept_id in [4]:
+            member = Students.find_by_id(int(data.get('member')))
+            member.is_up_to_date = True
+
+            today = date.today()
+            if member.expire_date < today:
+                while member.expire_date < today:
+                    member.expire_date += relativedelta(months=1)
+
 
         try:
             db.session.add(income)
@@ -138,7 +135,7 @@ def addEditIncome():
         if income.income_concept != "Mensualidad" and int(data.get('concept')) == 4:
             return make_response('No puedes cambiar el tipo de concepto a una mensualidad, ingresa esta mensualidad como un nuevo ingreso', 401)
 
-        income.date = date
+        income.date = income_date
         income.income_concept = concept
         income.payment_type = payment_type
         income.amount = total

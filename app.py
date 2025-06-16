@@ -21,6 +21,7 @@ from routes.students import students as students_blueprint
 from routes.incomes import incomes as incomes_blueprint
 from routes.expirations_control import expirations_control as expirations_control_blueprint
 from routes.leads import leads as leads_blueprint
+from routes.attendances import attendances as attendances_blueprint
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -52,6 +53,7 @@ def create_app():
     app.register_blueprint(incomes_blueprint)
     app.register_blueprint(expirations_control_blueprint)
     app.register_blueprint(leads_blueprint)
+    app.register_blueprint(attendances_blueprint)
 
     app.register_blueprint(users_blueprint)
     app.jinja_env.filters['birth_date_years'] = birth_date_years

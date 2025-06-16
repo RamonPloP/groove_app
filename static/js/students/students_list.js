@@ -117,7 +117,8 @@ function update_table(data) {
                         '<i class="fas fa-trash"></i>'+'</button>'+
                     '<button type="button" class="btn btn-outline-secondary" onclick="show_modal('+element.id+', \'/students/modal/regulation-pdf/'+element.id+'\')" title="Agregar reglamento">'+
                                         '<i class="fas fa-file-pdf"></i>'+
-                                    '</button>']
+                                    '</button>'+
+                    '<a class="btn btn-outline-success" target="_blank" href="/students/generate-card/'+element.id+'" title="Generar código de barras"><i class="fa-solid fa-clipboard-user nav-icon"></i></a>']
 
         item.push(btns.join(''));
         elements.push(item)

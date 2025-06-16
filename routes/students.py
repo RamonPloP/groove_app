@@ -8,7 +8,7 @@ from models.students import Students
 from datetime import datetime
 from flask import request
 from db import db
-from controllers.studentsController import addEditStudent, deleteStudent, addRegulationPDF
+from controllers.studentsController import addEditStudent, deleteStudent, addRegulationPDF, createMemberCard
 import logging
 
 logger = logging.getLogger(__name__)
@@ -129,3 +129,10 @@ def active_members():
     data = [info, inactive_students_count, total_members, amount_total]
 
     return data
+
+
+@students.route('/generate-card/<id>', methods=['GET'])
+@is_admin
+@login_required
+def students_add_member_card(id):
+    return createMemberCard(id)

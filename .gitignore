@@ -183,5 +183,6 @@ cython_debug/
 /static/signed_settlements/
 
 /static/students_pdfs
+/static/barcodes
 
 /sql

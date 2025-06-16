@@ -11,6 +11,7 @@ class Students(db.Model):
     last_name = db.Column(db.String(50))
     second_last_name = db.Column(db.String(50))
     start_date = db.Column(db.Date)
+    barcode = db.Column(db.String(100))
     expire_date = db.Column(db.Date)
     email = db.Column(db.String(150))
     status = db.Column(db.Boolean, default=True)

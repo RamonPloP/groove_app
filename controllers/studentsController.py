@@ -1,9 +1,13 @@
 from models.students import Students
 from models.constants import SocialMediaType, DanceReasons, BloodType
-from flask import request, make_response
+from flask import request, make_response, send_file
 from db import db
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import hashlib
+import barcode
+from PIL import Image
+from barcode.writer import ImageWriter
 import os
 import logging
 
@@ -113,3 +117,56 @@ def addRegulationPDF():
             return make_response("Formato de archivo no valido, Formato permitido solo PDF", 400)
     except Exception as e:
         return make_response(str(e), 400)
+
+def createMemberCard(member_id):
+    member = Students.find_by_id(member_id)
+    if not member:
+        return make_response('Miembro no encontrado.', 404)
+
+    # Ruta de guardado
+    output_dir = os.path.join('static', 'barcodes')
+    os.makedirs(output_dir, exist_ok=True)
+
+    filename = f"{member.name}_{member_id}_barcode.png"
+    full_path = os.path.join(output_dir, filename)
+
+    Code128 = barcode.get_barcode_class('code128')
+    writer_options = {
+        'font_size': 6,
+        'text_distance': 3,
+    }
+
+    def remove_white_background(image_path):
+        img = Image.open(image_path).convert("RGBA")
+        datas = img.getdata()
+        newData = []
+        for item in datas:
+            if item[0] > 250 and item[1] > 250 and item[2] > 250:
+                newData.append((255, 255, 255, 0))
+            else:
+                newData.append(item)
+        img.putdata(newData)
+        img.save(image_path, "PNG")
+
+    # Si ya tiene un código
+    if member.barcode:
+        if os.path.isfile(full_path):
+            return send_file(full_path, mimetype='image/png')
+        else:
+            barcode_img = Code128(member.barcode, writer=ImageWriter())
+            barcode_img.save(os.path.splitext(full_path)[0], options=writer_options)
+            remove_white_background(full_path)
+            return send_file(full_path, mimetype='image/png')
+
+    # Si no tiene código, generarlo
+    hash_object = hashlib.sha256(str(member_id).encode())
+    hashed_id = hash_object.hexdigest()[:12]
+
+    barcode_img = Code128(hashed_id, writer=ImageWriter())
+    barcode_img.save(os.path.splitext(full_path)[0], options=writer_options)
+    remove_white_background(full_path)
+
+    member.barcode = hashed_id
+    db.session.commit()
+
+    return send_file(full_path, mimetype='image/png')

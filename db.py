@@ -13,3 +13,4 @@ from models import students
 from models import incomes
 from models import expenses
 from models import users
+from models import attendances

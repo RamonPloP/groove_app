@@ -97,6 +97,8 @@ class Students(db.Model):
             'id': self.id,
             'expire_date': self.expire_date.strftime('%d/%m/%Y'),
             'name': self.name,
+            'last_name': self.last_name,
+            'second_last_name': self.second_last_name,
             'membership_id': self.membership_id,
             'amount': self.amount
         }

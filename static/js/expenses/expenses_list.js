@@ -81,8 +81,13 @@ function update_table(data) {
     let expenses = []
     $.each(data, function (i, element) {
         let expense = []
+
+        // Convertimos la fecha de DD/MM/YYYY a YYYY-MM-DD para una correcta ordenación
+        let dateParts = element.date.split('/');
+        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+
         expense.push(element.id)
-        expense.push(element.date)
+        expense.push(formattedDate)
         expense.push(element.expense_concept)
         if(element.description == null){
             expense.push('-')

@@ -75,7 +75,7 @@ function update_table(data) {
 
         // Convertimos la fecha de DD/MM/YYYY a YYYY-MM-DD para una correcta ordenación
         let dateParts = element.date.split('/');
-        let formattedDate = dateParts[0] + '/' + dateParts[1] + '/' + dateParts[2];  // Convertimos a YYYY-MM-DD
+        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];    // Convertimos a YYYY-MM-DD
 
         income.push(element.id);
         income.push(formattedDate);

@@ -72,7 +72,9 @@ def addEditIncome():
         concept_id = 'Otro'
         concept = 'Otro'
 
-    member = Students.find_by_id(int(data.get('member'))).name
+    member_ = Students.find_by_id(int(data.get('member')))
+
+    member = member_.name + ' ' + member_.last_name + ' ' +  member_.second_last_name
 
     description = data.get('desc') if concept_id in [8, 9] or concept_id == "Otro" else None
 

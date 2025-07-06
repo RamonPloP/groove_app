@@ -21,7 +21,8 @@
         let expirations = []
         $.each(data, function (i, element) {
             let expire = []
-            expire.push(element.name)
+            expire.push(element.id)
+            expire.push(element.name + ' ' + element.last_name + ' ' + element.second_last_name)
             expire.push(element.expire_date)
             expire.push('$ '+element.amount)
 
@@ -37,6 +38,7 @@
             data: expirations,
             responsive: true,
             columns: [
+                {title: "ID"},
                 {title: "NOMBRE"},
                 {title: "FECHA DE EXPIRACIÓN"},
                 {title: "MONTO"},
@@ -53,7 +55,8 @@
         let expirations = []
         $.each(data, function (i, element) {
             let expire = []
-            expire.push(element.name)
+            expire.push(element.id)
+            expire.push(element.name + ' ' + element.last_name + ' ' + element.second_last_name)
             expire.push(element.expire_date)
             expire.push('$ '+element.amount)
 
@@ -69,6 +72,7 @@
             data: expirations,
             responsive: true,
             columns: [
+                {title: "ID"},
                 {title: "NOMBRE"},
                 {title: "FECHA DE EXPIRACIÓN"},
                 {title: "MONTO"},
@@ -85,7 +89,8 @@
         let expirations = []
         $.each(data, function (i, element) {
             let expire = []
-            expire.push(element.name)
+            expire.push(element.id)
+            expire.push(element.name + ' ' + element.last_name + ' ' + element.second_last_name)
             expire.push(element.expire_date)
             expire.push('$ '+element.amount)
 
@@ -101,6 +106,7 @@
             data: expirations,
             responsive: true,
             columns: [
+                {title: "ID"},
                 {title: "NOMBRE"},
                 {title: "FECHA DE EXPIRACIÓN"},
                 {title: "MONTO"},

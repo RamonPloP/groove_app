@@ -27,6 +27,9 @@ def expirations_index():
 def get_expirations(type):
     today = datetime.now(timezone('America/Chihuahua')).date()
 
+    print('============ Date today')
+    print(today)
+
     if type == 'expired':
         expired = db.session.query(Students).filter(func.date(Students.expire_date) < today, Students.is_up_to_date == False).filter_by(status=1).all()
         for expire in expired:

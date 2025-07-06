@@ -124,7 +124,7 @@ function update_table(data) {
             {title: "CANTIDAD"},
             {title: "ACCIONES"}
         ],
-        "order": [[1, 'desc']]
+        "order": [[1, 'desc'], [0, 'desc']]
     });
 }
 

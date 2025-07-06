@@ -114,7 +114,7 @@ function update_table(data) {
             {title: "CANTIDAD"},
             {title: "ACCIONES"}
         ],
-        "order": [[1, 'desc']],  // Ordena por la columna de la fecha
+        "order": [[1, 'desc'], [0, 'desc']], // Ordena por la columna de la fecha
         "columnDefs": [
             {
                 "targets": [1],  // Aplica esta configuración a la columna 1 (la de la fecha)

@@ -96,10 +96,10 @@ def addEditIncome():
 
         member_form = int(data.get('member')) if data.get('member') else None
 
-        member_up_to_date = db.session.query(Students).filter_by(status=1, id=member_form, is_up_to_date=1).first()
+        #member_up_to_date = db.session.query(Students).filter_by(status=1, id=member_form, is_up_to_date=1).first()
 
-        if member_up_to_date and concept_id == 4:
-            return make_response('Este miembro ya pagó la mensualidad de este mes', 501)
+        #if member_up_to_date and concept_id == 4:
+        #    return make_response('Este miembro ya pagó la mensualidad de este mes', 501)
 
         if concept_id in [4]:
             member = Students.find_by_id(int(data.get('member')))

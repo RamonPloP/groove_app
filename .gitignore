@@ -8,6 +8,15 @@ __pycache__/
 templates/.DS_Store
 templates/home/.DS_Store
 
+controllers/.DS_Store
+controllers/incomesController.py
+models/.DS_Store
+routes/.DS_Store
+static/.DS_Store
+static/assets/.DS_Store
+templates/home/leads/modal_add.html
+
+
 
 # C extensions
 *.so

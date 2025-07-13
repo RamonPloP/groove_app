@@ -79,11 +79,13 @@
                     </div>
 
                     </div>
+                  {% if current_user.role == 0 %}
                     <div class="row card-body">
                         <div class="col-md-3">
                             <h3 id="total">Total egresos: $0</h3>
                         </div>
                     </div>
+                  {% endif %}
                   </div>
               </div>
           </div>

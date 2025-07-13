@@ -17,13 +17,11 @@ logger = logging.getLogger(__name__)
 expenses = Blueprint('expenses', __name__, url_prefix='/expenses')
 
 @expenses.route('/crud', methods=['POST'])
-@is_admin
 @login_required
 def expenses_crud():
     return addEditExpense()
 
 @expenses.route('/<id>')
-@is_admin
 @login_required
 def find_expense_concept(id):
     expense = Expenses.find_by_id(id)
@@ -38,19 +36,16 @@ def expense_concept_delete():
     return deleteExpense()
 
 @expenses.route('/all')
-@is_admin
 @login_required
 def expenses_list_view():
     return render_template('home/expenses/list.html')
 
 @expenses.route('/list')
-@is_admin
 @login_required
 def classes_list():
     return filter_expenses_by_date()
 
 @expenses.route('/add')
-@is_admin
 @login_required
 def expenses_add():
     concepts = db.session.query(ExpenseConcepts).all()

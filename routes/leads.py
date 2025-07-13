@@ -12,13 +12,11 @@ logger = logging.getLogger(__name__)
 leads = Blueprint('leads', __name__, url_prefix='/leads')
 
 @leads.route('/crud', methods=['POST'])
-@is_admin
 @login_required
 def leads_crud():
     return addEditLead()
 
 @leads.route('/<id>')
-@is_admin
 @login_required
 def find_lead(id):
     classes = db.session.query(Classes).all()
@@ -31,27 +29,23 @@ def lead_delete():
     return deleteLead()
 
 @leads.route('/all')
-@is_admin
 @login_required
 def leads_list_view():
     leads = Leads.get_all()
     return render_template('home/leads/list.html', leads=leads)
 
 @leads.route('/add/observation/<id>')
-@is_admin
 @login_required
 def leads_observations_view(id):
     lead = Leads.find_by_id(id)
     return render_template('home/leads/modal_add_observations.html', lead=lead)
 
 @leads.route('/add/observation', methods=['POST'])
-@is_admin
 @login_required
 def leads_observations_add():
     return addObservation()
 
 @leads.route('/list')
-@is_admin
 @login_required
 def leads_list():
     leads = Leads.get_all()
@@ -59,7 +53,6 @@ def leads_list():
     return leads
 
 @leads.route('/add')
-@is_admin
 @login_required
 def leads_add():
     classes = db.session.query(Classes).all()

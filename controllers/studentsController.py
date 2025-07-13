@@ -5,6 +5,8 @@ from db import db
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import hashlib
+import pytz
+from io import BytesIO
 import barcode
 from PIL import Image
 from barcode.writer import ImageWriter
@@ -94,9 +96,10 @@ def deleteStudent():
     student_id = data.get('studentToDelete')
     try:
         student = Students.find_by_id(student_id)
-        db.session.delete(student)
+        student.status = 0
+        student.end_date = datetime.now(pytz.timezone("America/Chihuahua"))
         db.session.commit()
-        return make_response('Borrado existoso.', 201)
+        return make_response('Dado de baja existoso.', 201)
     except Exception as e:
         return make_response(str(e), 400)
 
@@ -123,50 +126,49 @@ def createMemberCard(member_id):
     if not member:
         return make_response('Miembro no encontrado.', 404)
 
-    # Ruta de guardado
-    output_dir = os.path.join('static', 'barcodes')
-    os.makedirs(output_dir, exist_ok=True)
-
-    filename = f"{member.name}_{member_id}_barcode.png"
-    full_path = os.path.join(output_dir, filename)
-
     Code128 = barcode.get_barcode_class('code128')
     writer_options = {
         'font_size': 6,
         'text_distance': 3,
+        'write_text': True,
     }
 
-    def remove_white_background(image_path):
-        img = Image.open(image_path).convert("RGBA")
-        datas = img.getdata()
-        newData = []
-        for item in datas:
-            if item[0] > 250 and item[1] > 250 and item[2] > 250:
-                newData.append((255, 255, 255, 0))
-            else:
-                newData.append(item)
-        img.putdata(newData)
-        img.save(image_path, "PNG")
-
-    # Si ya tiene un código
+    # Determinar el contenido del código de barras
     if member.barcode:
-        if os.path.isfile(full_path):
-            return send_file(full_path, mimetype='image/png')
+        barcode_content = member.barcode
+    else:
+        # Generar un código hash si no existe
+        hash_object = hashlib.sha256(str(member_id).encode())
+        barcode_content = hash_object.hexdigest()[:12]
+        member.barcode = barcode_content
+        db.session.commit()
+
+    # Generar el código de barras en memoria
+    barcode_img = Code128(barcode_content, writer=ImageWriter())
+    buffer = BytesIO()
+    barcode_img.write(buffer, options=writer_options)
+    buffer.seek(0)
+
+    # Quitar fondo blanco (opcional)
+    image = Image.open(buffer).convert("RGBA")
+    datas = image.getdata()
+    newData = []
+    for item in datas:
+        if item[0] > 250 and item[1] > 250 and item[2] > 250:
+            newData.append((255, 255, 255, 0))  # Transparente
         else:
-            barcode_img = Code128(member.barcode, writer=ImageWriter())
-            barcode_img.save(os.path.splitext(full_path)[0], options=writer_options)
-            remove_white_background(full_path)
-            return send_file(full_path, mimetype='image/png')
+            newData.append(item)
+    image.putdata(newData)
 
-    # Si no tiene código, generarlo
-    hash_object = hashlib.sha256(str(member_id).encode())
-    hashed_id = hash_object.hexdigest()[:12]
+    # Guardar en buffer de salida final
+    output_buffer = BytesIO()
+    image.save(output_buffer, format="PNG")
+    output_buffer.seek(0)
 
-    barcode_img = Code128(hashed_id, writer=ImageWriter())
-    barcode_img.save(os.path.splitext(full_path)[0], options=writer_options)
-    remove_white_background(full_path)
-
-    member.barcode = hashed_id
-    db.session.commit()
-
-    return send_file(full_path, mimetype='image/png')
+    # Enviar como respuesta de archivo descargable
+    return send_file(
+        output_buffer,
+        mimetype='image/png',
+        as_attachment=True,
+        download_name=f"{member.name}_{member_id}_barcode.png"
+    )

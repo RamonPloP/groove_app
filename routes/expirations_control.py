@@ -15,7 +15,6 @@ expirations_control = Blueprint('expirations', __name__, url_prefix='/expiration
 
 @expirations_control.route('/all')
 @login_required
-@is_admin
 def expirations_index():
     today = datetime.now(timezone('America/Chihuahua'))
     today = datetime.strftime(today, '%d/%m/%Y')
@@ -23,13 +22,8 @@ def expirations_index():
 
 @expirations_control.route('/list/<type>')
 @login_required
-@is_admin
 def get_expirations(type):
     today = datetime.now(timezone('America/Chihuahua')).date()
-
-    print('============ Date today')
-    print(today)
-
     if type == 'expired':
         expired = db.session.query(Students).filter(func.date(Students.expire_date) < today, Students.is_up_to_date == False).filter_by(status=1).all()
         for expire in expired:

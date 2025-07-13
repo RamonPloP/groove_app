@@ -39,18 +39,22 @@
             <p>Dashboard</p>
           </a>
         </li>
+       {% if current_user.role == 0 %}
       <li class="nav-item">
           <a href="/students/active-members" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
             <i class="fa-solid fa-chart-line nav-icon"></i>
             <p>Miembros activos</p>
           </a>
         </li>
+        {% endif %}
+        {% if current_user.role == 0 %}
         <li class="nav-item">
           <a href="/users/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
             <i class="fa-solid fa-user nav-icon"></i>
             <p>Lista de usuarios</p>
           </a>
         </li>
+        {% endif %}
         <li class="nav-item">
           <a href="/students/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">
             <i class="fa-solid fa-people-robbery nav-icon"></i>
@@ -86,6 +90,7 @@
             <p>Leads</p>
           </a>
         </li>
+    {% if current_user.role == 0 %}
       <li class="nav-header">Configuraciones</li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -143,6 +148,7 @@
                 </a>
               </li>
             </ul>
+        {% endif %}
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

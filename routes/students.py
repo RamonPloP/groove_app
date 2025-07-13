@@ -16,13 +16,11 @@ logger = logging.getLogger(__name__)
 students = Blueprint('students', __name__, url_prefix='/students')
 
 @students.route('/crud', methods=['POST'])
-@is_admin
 @login_required
 def students_crud():
     return addEditStudent()
 
 @students.route('/<id>')
-@is_admin
 @login_required
 def find_student_concept(id):
     memberships = db.session.query(Memberships).all()
@@ -36,14 +34,12 @@ def student_concept_delete():
     return deleteStudent()
 
 @students.route('/all')
-@is_admin
 @login_required
 def students_list_view():
     students = Students.get_all()
     return render_template('home/students/list.html', students=students)
 
 @students.route('/list')
-@is_admin
 @login_required
 def students_list():
     students = Students.get_all()
@@ -59,7 +55,6 @@ def students_list():
     return students
 
 @students.route('/add')
-@is_admin
 @login_required
 def students_add():
     memberships = db.session.query(Memberships).all()
@@ -67,26 +62,22 @@ def students_add():
     return render_template('home/students/modal_add.html', teachers=teachers, memberships=memberships)
 
 @students.route('/modal/regulation-pdf/<id>')
-@is_admin
 @login_required
 def students_add_regulation_pdf_modal(id):
     student = Students.find_by_id(id)
     return render_template('home/students/modal_add_regulation.html', student=student)
 
 @students.route('/add/regulation-pdf', methods=['POST'])
-@is_admin
 @login_required
 def students_add_regulation_pdf():
     return addRegulationPDF()
 
 @students.route('/active-members')
-@is_admin
 @login_required
 def active_members_view():
     return render_template('home/students/actives.html')
 
 @students.route('/active-members/get')
-@is_admin
 @login_required
 def active_members():
     start_date = request.args.get('start_date')
@@ -132,7 +123,6 @@ def active_members():
 
 
 @students.route('/generate-card/<id>', methods=['GET'])
-@is_admin
 @login_required
 def students_add_member_card(id):
     return createMemberCard(id)

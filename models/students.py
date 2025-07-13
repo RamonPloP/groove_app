@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Enum, desc
 from datetime import datetime
 from db import db
-
+from models.memberships import Memberships
 from models.constants import SocialMediaType, DanceReasons, BloodType
 
 class Students(db.Model):
@@ -11,6 +11,7 @@ class Students(db.Model):
     last_name = db.Column(db.String(50))
     second_last_name = db.Column(db.String(50))
     start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     barcode = db.Column(db.String(100))
     expire_date = db.Column(db.Date)
     email = db.Column(db.String(150))
@@ -106,6 +107,15 @@ class Students(db.Model):
     @classmethod
     def get_all(cls):
         students = Students.query.filter_by(status=1).all()
+        return students
+
+    @classmethod
+    def get_all_actives(cls):
+        students = Students.query.filter_by(status=1).all()
+        for student in students:
+            membership = Memberships.find_by_id(student.membership_id)
+            formatted_currency_format = "${:,.0f}".format(membership.cost)
+            student.membership = membership.name + f' ({formatted_currency_format})'
         return students
 
     @classmethod

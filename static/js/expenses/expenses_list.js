@@ -1,6 +1,17 @@
      $(function() {
-      get_data('/expenses/list?page=0')
-    });
+    let currentDate = new Date();
+
+    let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+    let today = currentDate.toISOString().split('T')[0];
+    let firstDay = firstDayOfMonth.toISOString().split('T')[0];
+
+    $('#start_date_filter').val(firstDay);
+    $('#end_date_filter').val(today);
+
+    let url = `/expenses/list?page=0&start_date=${firstDay}&end_date=${today}`;
+    get_data(url);
+});
      function edit(id, button) {
         $(button).attr('disabled', true);
         axios({

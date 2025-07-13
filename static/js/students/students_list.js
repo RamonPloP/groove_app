@@ -76,10 +76,16 @@ function update_table(data) {
     $.each(data, function (i, element) {
         let item = []
         item.push(element.id)
-        if(element.is_up_to_date == true){
-            item.push('🟢 Al día')
+        if(element.status == '1'){
+            item.push('Activo')
+            if(element.is_up_to_date == true){
+                item.push('🟢 Al día')
+            }else{
+                item.push('🟡 Pendiente')
+            }
         }else{
-            item.push('🟡 Pendiente')
+            item.push('Baja')
+            item.push('-')
         }
 
         item.push(element.name)
@@ -90,6 +96,7 @@ function update_table(data) {
         item.push(element.membership)
         item.push(element.how_find_us_text)
         item.push(element.expire_date)
+        item.push(element.end_date)
         item.push(element.dance_reason_text || '-')
         item.push(element.address || '-')
         item.push(element.birth_date || '-')
@@ -139,7 +146,8 @@ function update_table(data) {
         data: elements,
         columns: [
             {title: "ID"},
-            {title: "Mensualidad"},
+            {title: "ESTATUS"},
+            {title: "MENSUALIDAD"},
             {title: "NOMBRE"},
             {title: "APELLIDO PATERNO"},
             {title: "APELLIDO MATERNO"},
@@ -148,6 +156,7 @@ function update_table(data) {
             {title: "MEMBRESÍA"},
             {title: "CÓMO NOS CONOCIÓ"},
             {title: "FECHA DE VENCIMIENTO"},
+            {title: "FECHA DE BAJA"},
             {title: "RAZÓN PARA BAILAR"},
             {title: "DIRECCIÓN"},
             {title: "FECHA DE NACIMIENTO"},

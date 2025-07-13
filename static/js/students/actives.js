@@ -46,6 +46,7 @@ function get_data(url, startDate = '', endDate = '') {
 
 function update_totals(data){
   $('#inactives').html('Bajas: '+data[1]);
+  $('#new_members').html('Altas: '+data[4]);
   $('#total_members').html(data[2]);
   $('#amount_total').html('Total: '+data[3].toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 }

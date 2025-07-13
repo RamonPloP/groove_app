@@ -56,9 +56,11 @@ class Students(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'status': self.status,
             'last_name': self.last_name,
             'second_last_name': self.second_last_name,
             'start_date': self.start_date,
+            'end_date': self.end_date,
             'expire_date': self.expire_date,
             'is_up_to_date': self.is_up_to_date,
             'email': self.email,
@@ -106,7 +108,7 @@ class Students(db.Model):
 
     @classmethod
     def get_all(cls):
-        students = Students.query.filter_by(status=1).all()
+        students = Students.query.all()
         return students
 
     @classmethod

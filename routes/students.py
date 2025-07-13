@@ -45,6 +45,8 @@ def students_list():
     students = Students.get_all()
     for student in students:
         student.start_date = student.start_date.strftime('%Y/%m/%d')
+        if student.end_date:
+            student.end_date = student.end_date.strftime('%Y/%m/%d')
         student.expire_date = student.expire_date.strftime('%Y/%m/%d')
         student.birth_date = student.birth_date.strftime('%Y/%m/%d')
         student.membership = Memberships.find_by_id(student.membership_id).name
@@ -93,7 +95,6 @@ def active_members():
 
     memberships = Memberships.get_all()
     info = []
-    total_members = 0
     amount_total = 0
 
     for membership in memberships:
@@ -105,7 +106,6 @@ def active_members():
 
         active_students_count = active_students_query.count()
 
-        total_members += active_students_count
         amount_total += membership.cost * active_students_count
 
         info.append({
@@ -114,10 +114,15 @@ def active_members():
             'total': membership.cost * active_students_count
         })
 
-    inactive_students_count = db.session.query(Students).filter_by(status=0).filter(Students.start_date >= start_date,
+    inactive_students_count = db.session.query(Students).filter_by(status=0).filter(Students.end_date >= start_date,
                                                                                     Students.start_date <= end_date).count()
 
-    data = [info, inactive_students_count, total_members, amount_total]
+    new_students_count = db.session.query(Students).filter_by(status=1).filter(Students.start_date >= start_date,
+                                                                                    Students.start_date <= end_date).count()
+
+    total_members = len(Students.get_all_actives())
+
+    data = [info, inactive_students_count, total_members, amount_total, new_students_count]
 
     return data
 

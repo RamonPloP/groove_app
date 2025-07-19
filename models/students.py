@@ -126,6 +126,11 @@ class Students(db.Model):
         return student
 
     @classmethod
+    def find_by_barcode(cls, barcode):
+        student = Students.query.filter_by(barcode=barcode).first()
+        return student
+
+    @classmethod
     def find_by_name(cls, name):
         student = Students.query.filter_by(name=name).first()
         return student

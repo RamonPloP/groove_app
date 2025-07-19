@@ -14,15 +14,9 @@ attendances = Blueprint('attendances', __name__, url_prefix='/attendances')
 def attendances_crud():
     return addAttendance()
 
-@attendances.route('/<id>')
-@login_required
-def find_class(id):
-    attendance = Attendances.find_by_id(id)
-    return render_template('home/classes/modal_edit.html', attendance=attendance)
-
 @attendances.route('/delete', methods=['POST'])
 @login_required
-def attendance_delete():
+def attendances_delete():
     return deleteAttendance()
 
 @attendances.route('/all')

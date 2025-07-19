@@ -80,7 +80,7 @@ if __name__ == '__main__':
     app = create_app()
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=lambda: check_members_payments(app), trigger="cron", hour=0, minute=0, timezone=timezone('America/Chihuahua'))
+    scheduler.add_job(func=lambda: check_members_payments(app), trigger="cron", hour=0, minute=5, timezone=timezone('America/Chihuahua'))
     scheduler.start()
     atexit.register(lambda: scheduler.shutdown())
 

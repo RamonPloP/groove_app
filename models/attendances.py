@@ -22,8 +22,8 @@ class Attendances(db.Model):
         member = Students.find_by_id(self.member_id)
         return {
             'id': self.id,
-            'member': member,
-            'date': self.date
+            'member': str(member.id) + ' | ' + member.name + ' ' + member.last_name + ' ' + member.second_last_name,
+            'date': self.date.strftime('%d/%m/%Y')
         }
 
     @classmethod

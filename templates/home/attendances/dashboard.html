@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/static/assets/img/logo.png" type="image/x-icon">
   <title>Registro de Asistencia - Academia</title>
 
   <!-- Fuente personalizada -->
@@ -24,17 +25,19 @@
     }
 
     body {
-      background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 1)),
-                  url('/static/assets/img/background-dashboard.jpg') center center no-repeat;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 1)),
+              url('/static/assets/img/background-dashboard.jpg') center center no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center; /* Mantiene centrado horizontalmente */
+  /* align-items: center;   ❌ Comenta o elimina esta línea */
+  min-height: 100vh;
+}
 
     .container {
       text-align: center;
       color: white;
+      padding-top: 150px; /* ✅ Ajusta este valor a gusto */
     }
 
     h1 {
@@ -52,7 +55,7 @@
       border: 5px solid white;
     }
 
-    #scanner {
+    #barcode {
       margin-top: 40px;
       font-size: 24px;
       padding: 15px;
@@ -76,43 +79,15 @@
     <h1>¡Bienvenido a Lost in Groove!</h1>
     <img src="/static/assets/img/logo_favicon.jpg" alt="Logo" class="logo">
     <br>
-    <input type="text" id="scanner" placeholder="Escanea tu código..." autofocus />
+    <form id="addForm">
+      <input type="text" id="barcode" name="barcode" placeholder="Escanea tu código..." autofocus />
+    </form>
     <div id="success"></div>
   </div>
 
-  <script>
-    const scannerInput = document.getElementById('scanner');
-    const successMessage = document.getElementById('success');
-
-    // Simulación de base de datos de miembros
-    const members = {
-      "123456": "Juan Pérez",
-      "789012": "María López",
-      "345678": "Carlos García"
-    };
-
-    scannerInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        const code = scannerInput.value.trim();
-        const name = members[code];
-        const now = new Date();
-        const time = now.toLocaleTimeString();
-
-        if (name) {
-          successMessage.textContent = `✅ Asistencia registrada para ${name} a las ${time}`;
-          successMessage.style.color = 'limegreen';
-        } else {
-          successMessage.textContent = `❌ Código no reconocido`;
-          successMessage.style.color = 'red';
-        }
-
-        successMessage.style.display = 'block';
-        scannerInput.value = '';
-        setTimeout(() => {
-          successMessage.style.display = 'none';
-        }, 3000);
-      }
-    });
-  </script>
+<script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+<script src="/static/js/attendances/attendances_add.js"></script>
 </body>
 </html>

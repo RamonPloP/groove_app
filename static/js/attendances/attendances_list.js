@@ -33,8 +33,9 @@ function update_table(data) {
     $.each(data, function (i, element) {
         let attendance = []
         attendance.push(element.id)
-        attendance.push(element.name)
-        attendance.push('<button type="button" class="btn btn-outline-danger" onclick="delete_class('+element.id +', this)">'+
+        attendance.push(element.member)
+        attendance.push(element.date)
+        attendance.push('<button type="button" class="btn btn-outline-danger" onclick="delete_attendance('+element.id +', this)">'+
                             '<i class="fas fa-trash"></i>'+
                         '</button>')
         attendances.push(attendance)
@@ -84,4 +85,26 @@ function delete_attendance(id) {
     });
 }
 
+function delete_attendance(id) {
+    let attendance_id = id;
 
+    $('#confirmationModal').modal('show');
+
+    $('#confirmDeleteButton').off('click').on('click', function() {
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            url: '/attendances/delete',
+            data: {attendance_id: attendance_id}
+        }).then(function (response) {
+            toastr.success(response.data, { timeOut: 9500 });
+            get_data('/attendances/list?page=0');
+            $('#confirmationModal').modal('hide');
+        }).catch(function (error) {
+            toastr.error(error.response.data);
+            console.log(error.response);
+        });
+    });
+}

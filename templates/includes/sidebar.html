@@ -78,11 +78,31 @@
         <i class="fa-regular fa-clock nav-icon"></i>
         <p>Control de vencimientos</p>
       </a>
-    </li><li class="nav-item">
-      <a href="/attendances/all" class="nav-link">
-        <i class="fa-solid fa-clipboard-user nav-icon"></i>
-        <p>Asistencias</p>
-      </a>
+    </li>
+    <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="fa-solid fa-table-list nav-icon"></i>
+              <p>
+                Asistencias
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: none;">
+              <li class="nav-item">
+                <a href="/attendances/all" class="nav-link">
+                  <i class="fa-solid fa-clipboard-user nav-icon"></i>
+                  <p>Lista de asistencias</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview" style="display: none;">
+              <li class="nav-item">
+                <a href="/attendances/members-add" class="nav-link">
+                  <i class="fa-solid fa-barcode nav-icon"></i>
+                  <p>Toma de asistencia</p>
+                </a>
+              </li>
+            </ul>
     </li>
       <li class="nav-item">
           <a href="/leads/all" class="nav-link {% if 'index2.html' in segment %} active {% endif %}">

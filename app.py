@@ -1,8 +1,11 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
-
+from pytz import timezone
+import atexit
 from db import db
+from datetime import date
+from models.students import Students
 from config import Config
 from models.users import Users
 from auth import auth as auth_blueprint
@@ -22,6 +25,7 @@ from routes.incomes import incomes as incomes_blueprint
 from routes.expirations_control import expirations_control as expirations_control_blueprint
 from routes.leads import leads as leads_blueprint
 from routes.attendances import attendances as attendances_blueprint
+from apscheduler.schedulers.background import BackgroundScheduler
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -32,6 +36,13 @@ migrate = Migrate()
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
+def check_members_payments(app):
+    with app.app_context():
+        students = Students.get_all_actives()
+        for student in students:
+            if student.expire_date <= date.today():
+                student.is_up_to_date = 0
+        db.session.commit()
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
@@ -67,6 +78,12 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=lambda: check_members_payments(app), trigger="cron", hour=0, minute=0, timezone=timezone('America/Chihuahua'))
+    scheduler.start()
+    atexit.register(lambda: scheduler.shutdown())
+
     app.run()
 
 
